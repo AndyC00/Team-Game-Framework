@@ -22,7 +22,7 @@ EnemyS::~EnemyS()
 
 bool EnemyS::Initialise(Renderer& renderer)
 {
-	const char* pcFilename = "Sprites\\";
+	const char* pcFilename = "Sprites\\skeleton.png";
 
 	if (!Entity::Initialise(renderer, pcFilename))
 	{
