@@ -1,6 +1,8 @@
-#include "Entity.h"
+#ifndef _ENEMYS_H_
+#define _ENEMYS_H_
 
-#include <vector>
+
+#include "Entity.h"
 
 class EnemyS : public Entity
 {
@@ -24,3 +26,5 @@ protected:
 private:
 
 };
+
+#endif // _ENEMYS_H_

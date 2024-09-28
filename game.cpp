@@ -1,13 +1,14 @@
 ﻿// This include: 
 #include "game.h"
 #include "sprite.h"
-#include "scenecheckerboards.h"
 #include "scene.h"
 #include "ball.h"
 #include "inputsystem.h"
 #include "animatedsprite.h"
 #include "soundsystem.h"
 
+#include "TitleScene.h"
+#include "dungeon1.h"
 
 // Library includes: 
 #include "renderer.h" 
@@ -80,9 +81,10 @@ void Game::Quit()
 
 bool Game::Initialise()
 {
-	//load soundsystem:
+	//load sound system:
 	pSoundsystem->init();
 
+	//define the size of the screen
 	int bbWidth = 1860;
 	int bbHeight = 1050;
 
@@ -99,15 +101,15 @@ bool Game::Initialise()
 
 	//creating the scenes:
 	Scene* pScene = 0;
-	pScene = new SceneCheckerboards();
+	pScene = new TitleScene();
 	pScene->Initialise(*m_pRenderer);
 	m_scenes.push_back(pScene);
 	m_iCurrentScene = 0;
 
-	/*Scene* pScene2 = 0;
-	pScene2 = new InstructionScene();
-	pScene2->Initialise(*m_pRenderer);
-	m_scenes.push_back(pScene2);*/
+	Scene* pScene2 = 0;
+	pScene = new Dungeon1Scene();
+	pScene->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene);
 
 	// text renderer at last:
 	// Load static text textures into the Texture Manager... 

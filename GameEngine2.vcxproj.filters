@@ -54,7 +54,7 @@
     <ClCompile Include="scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scenecheckerboards.cpp">
+    <ClCompile Include="TitleScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vector2.cpp">
@@ -99,6 +99,9 @@
     <ClCompile Include="EnemyS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dungeon1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="logmanager.h">
@@ -131,7 +134,7 @@
     <ClInclude Include="scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scenecheckerboards.h">
+    <ClInclude Include="TitleScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inlinehelpers.h">
@@ -183,6 +186,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnemyS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeon1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
