@@ -32,6 +32,7 @@ Dungeon1Scene::~Dungeon1Scene()
 
 bool Dungeon1Scene::Initialise(Renderer& renderer)
 {
+	//load the background sprite here bro
 	m_pCentre = renderer.CreateSprite("Sprites\\board8x8.png");
 
 	const int BOARD_HALF_WIDTH = m_pCentre->GetWidth() / 2;
@@ -48,9 +49,6 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 		EnemyS* m_Enemy1 = new EnemyS();
 		m_Enemy1->Initialise(renderer);
 		m_Enemies1.push_back(m_Enemy1);
-
-		m_Enemy1->GetPosition().x = renderer.GetWidth() / 2.0f;
-		m_Enemy1->GetPosition().y = renderer.GetHeight() / 2.0f;
 	}
 
 	return true;
