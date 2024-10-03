@@ -13,11 +13,11 @@ public:
 	//member methods:
 public:
 	bool Initialise(Renderer& renderer);
+	void Process(float deltaTime);
 
 protected:
 
 private:
-	void Process(float deltaTime);
 	bool IsNearBoundary(Vector2 m_position);
 
 	//member data:
@@ -26,10 +26,12 @@ public:
 protected:
 
 private:
-	float m_moveTimer;
 	Vector2 m_targetPosition;
 	float m_speed;
-
+	float m_moveTimer;
+	float m_moveInterval;
+	float m_moveDistance;
+	float m_moveRange;
 };
 
 #endif // _ENEMYS_H_

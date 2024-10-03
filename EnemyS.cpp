@@ -1,19 +1,25 @@
 // This include:
 #include "EnemyS.h"
+#include "sprite.h"
 
 // Local includes:
 #include "entity.h"
+#include "vector2.h"
 
 // Library includes:
 #include "renderer.h"
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
+#include <ctime> 
 
 
 EnemyS::EnemyS() :Entity(),
-	m_moveTimer(0.0f), 
-	m_speed(30.0f)
+m_moveTimer(0.0f),
+m_moveInterval(2.0f),
+m_speed(35.0f),
+m_moveDistance(50.0f),
+m_moveRange(80.0f)
 {
 
 }
@@ -37,6 +43,7 @@ bool EnemyS::Initialise(Renderer& renderer)
 	int m_x = ((rand() % 2 == 0) ? (rand() % 890 + 10) : (rand() % 890 + 910));
 	int m_y = ((rand() % 2 == 0) ? (rand() % 490 + 10) : (rand() % 480 + 550));
 	m_position = Vector2(m_x, m_y);
+	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
 
 	return true;
@@ -48,25 +55,56 @@ void EnemyS::Process(float deltaTime)
 	{
 		m_moveTimer += deltaTime;
 
-		//go back if near the edge of the screen
-		if (IsNearBoundary(m_position))
+		if (m_moveTimer >= m_moveInterval)
 		{
-			Vector2 center(930.0f, 530.0f); // the center of the screen (1860/2, 1060/2)
-			Vector2 direction = center - m_position;
-			float angleToCenter = atan2(direction.y, direction.x) * 180.0f / M_PI - 90.0f;
-		}
-		else
-		{
-			m_position += m_velocity * deltaTime;
+			m_moveTimer = 0.0f;
+
+			float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
+
+			Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
+
+			Vector2 potentialPosition = m_position + displacement;
+
+			if ((potentialPosition - m_position).Length() <= m_moveRange)
+			{
+				m_targetPosition = potentialPosition;
+			}
+			else
+			{
+				displacement.Normalise();
+				displacement *= m_moveRange;
+				m_targetPosition = m_position + displacement;
+			}
 		}
 
-		Entity::Process(deltaTime);
+		Vector2 direction = m_targetPosition - m_position;
+		float distanceToTarget = direction.Length();
+
+		if (distanceToTarget > 0.1f)
+		{
+			direction.Normalise();
+
+			Vector2 movement = direction * m_speed * deltaTime;
+
+			if (movement.Length() > distanceToTarget)
+			{
+				m_position = m_targetPosition;
+			}
+			else
+			{
+				m_position += movement;
+			}
+		}
+
+		m_pSprite->SetX(static_cast<int>(m_position.x));
+		m_pSprite->SetY(static_cast<int>(m_position.y));
+
 	}
 }
 
 bool EnemyS::IsNearBoundary(Vector2 m_position)
 {
-	float margin = 35.0f; //the distence to trigger the function
+	float margin = 35.0f; //the distance to trigger the function
 
 	return (m_position.x <= margin || m_position.x >= 1860.0f - margin ||
 		m_position.y <= margin || m_position.y >= 1060.0f - margin);
