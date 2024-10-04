@@ -8,6 +8,8 @@
 #include "renderer.h"
 #include <cstdlib>
 #include <cmath>
+#include <iostream>
+
 
 EnemyS::EnemyS() :Entity()
 
@@ -22,11 +24,11 @@ EnemyS::~EnemyS()
 
 bool EnemyS::Initialise(Renderer& renderer)
 {
-	const char* pcFilename = "Sprites\\";
+	const char* pcFilename = "Sprites\\skeleton.png";
 
 	if (!Entity::Initialise(renderer, pcFilename))
 	{
-		printf("Enemy failed to spawn\n");
+		std::cout << "Enemy failed to spawn" << std::endl;
 		return false;
 	}
 
