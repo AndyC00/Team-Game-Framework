@@ -114,6 +114,7 @@ void Dungeon1Scene::DebugDraw()
     m_pCentre->SetX(position[0]);
     m_pCentre->SetY(position[1]);
 
+
     float tint[4];
     tint[0] = m_pCentre->GetRedTint();
     tint[1] = m_pCentre->GetGreenTint();

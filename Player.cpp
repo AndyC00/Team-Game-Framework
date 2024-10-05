@@ -60,31 +60,60 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     if (inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_HELD)
     {
         // Move left
-        movement.x -= 1.0f;  
+        movement.x -= 1.0f;
         // Face left
-        m_facingDirection.Set(-1.0f, 0.0f);  
+        m_facingDirection.Set(-1.0f, 0.0f);
     }
     if (inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_HELD)
     {
         // Move right
-        movement.x += 1.0f; 
+        movement.x += 1.0f;
         // Face right
-        m_facingDirection.Set(1.0f, 0.0f);  
+        m_facingDirection.Set(1.0f, 0.0f);
     }
 
     // Update the position based on the movement vector and speed
     m_position += movement * m_moveSpeed * deltaTime;
 
+    // Get screen boundaries from the renderer
+    float screenWidth = static_cast<float>(renderer.GetWidth());
+    float screenHeight = static_cast<float>(renderer.GetHeight());
+
+    // Define player's sprite width and height for boundary checking
+    float spriteWidth = m_pSprite->GetWidth() * m_pSprite->GetScale();
+    float spriteHeight = m_pSprite->GetHeight() * m_pSprite->GetScale();
+
+    // Boundary check to keep the player within the screen
+    if (m_position.x < 0.0f)
+    {
+        m_position.x = 0.0f;
+    }
+
+    if (m_position.x + spriteWidth > screenWidth)
+    {
+        m_position.x = screenWidth - spriteWidth;
+    }
+
+    if (m_position.y < 0.0f)
+    {
+        m_position.y = 0.0f;
+    }
+
+    if (m_position.y + spriteHeight > screenHeight)
+    {
+        m_position.y = screenHeight - spriteHeight;
+    }
+
     // Weapon switching
     if (inputSystem.GetKeyState(SDL_SCANCODE_1) == BS_PRESSED)
     {
         // Switch to Melee
-        m_currentWeapon = 1;  
+        m_currentWeapon = 1;
     }
     else if (inputSystem.GetKeyState(SDL_SCANCODE_2) == BS_PRESSED)
     {
         // Switch to Projectile
-        m_currentWeapon = 2;  
+        m_currentWeapon = 2;
     }
 
     // Attack when spacebar is pressed
@@ -99,14 +128,15 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     }
 
     // Update all projectiles
-    for (auto it = m_projectiles.begin(); it != m_projectiles.end(); )
+    for (auto it = m_projectiles.begin(); it != m_projectiles.end();)
     {
         (*it)->Process(deltaTime);
-
-        if (!(*it)->IsAlive())  // Remove "dead" projectiles
+        // Remove "dead" projectiles
+        if (!(*it)->IsAlive())  
         {
             delete* it;
-            it = m_projectiles.erase(it);  // Erase the projectile
+            // Erase the projectile
+            it = m_projectiles.erase(it);  
         }
         else
         {
@@ -115,14 +145,16 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     }
 
     // Update all melee hitboxes
-    for (auto it = m_meleeHitboxes.begin(); it != m_meleeHitboxes.end(); )
+    for (auto it = m_meleeHitboxes.begin(); it != m_meleeHitboxes.end();)
     {
         (*it)->Process(deltaTime);
 
-        if (!(*it)->IsAlive())  // Remove "dead" melee hitboxes
+        // Remove "dead" melee hitboxes
+        if (!(*it)->IsAlive())  
         {
             delete* it;
-            it = m_meleeHitboxes.erase(it);  // Erase the hitbox
+            // Erase the hitbox
+            it = m_meleeHitboxes.erase(it);  
         }
         else
         {
@@ -132,6 +164,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
 
     Entity::Process(deltaTime);
 }
+
 
 void Player::Attack(Renderer& renderer)
 {
@@ -163,7 +196,8 @@ void Player::Attack(Renderer& renderer)
 
 void Player::Draw(Renderer& renderer)
 {
-    Entity::Draw(renderer);  // Draw the player
+    // Draw the player
+    Entity::Draw(renderer);  
 
     // Draw all projectiles
     for (auto projectile : m_projectiles)
