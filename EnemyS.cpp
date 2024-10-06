@@ -19,7 +19,8 @@ m_moveTimer(0.0f),
 m_moveInterval(2.0f),
 m_speed(35.0f),
 m_moveDistance(50.0f),
-m_moveRange(80.0f)
+m_moveRange(80.0f),
+attack_range(30.0f)
 {
 
 }
@@ -54,6 +55,14 @@ void EnemyS::Process(float deltaTime)
 	if (IsAlive())
 	{
 		m_moveTimer += deltaTime;
+
+		//calculate if the player come within the enemy's attack range:
+		if (IsWithinRange)
+		{
+			Attack();
+			//heading to the player:
+
+		}
 
 		if (m_moveTimer >= m_moveInterval)
 		{
@@ -108,4 +117,15 @@ bool EnemyS::IsNearBoundary(Vector2 m_position)
 
 	return (m_position.x <= margin || m_position.x >= 1860.0f - margin ||
 		m_position.y <= margin || m_position.y >= 1060.0f - margin);
+}
+
+//todo: Player_position need to be passed to here
+bool EnemyS::IsWithinRange(Vector2 m_position, Vector2 Player_position)
+{
+	
+}
+
+void EnemyS::Attack()
+{
+	
 }
