@@ -8,7 +8,7 @@
 #include "soundsystem.h"
 
 #include "TitleScene.h"
-#include "dungeon1.h"
+#include "dungeon1scene.h"
 
 // Library includes: 
 #include "renderer.h" 

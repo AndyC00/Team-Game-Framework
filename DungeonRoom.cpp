@@ -44,6 +44,18 @@ bool DungeonRoom::CreateFromJSON(const std::string& filename)
     nWidth = j["width"];
     nHeight = j["height"];
 
+    // Parse spritesheet data
+    std::string spritesheetFile = j["spritesheet"]["file"];
+    int tileWidth = j["spritesheet"]["tileWidth"];
+    int tileHeight = j["spritesheet"]["tileHeight"];
+
+    // Load the spritesheet
+    Texture* tileTexture = new Texture();
+    tileTexture->Initialise(spritesheetFile.c_str());
+
+    m_pSpriteSheet = new SpriteSheet();
+    m_pSpriteSheet->Initialise(*tileTexture, tileWidth, tileHeight);
+
     // Allocate memory for indices and solids
     m_indices = new int[nWidth * nHeight];
     m_solids = new bool[nWidth * nHeight];
@@ -55,11 +67,9 @@ bool DungeonRoom::CreateFromJSON(const std::string& filename)
         m_solids[i] = j["solids"][i];
     }
 
-    // Load the tiles
-    LoadTiles();
-
     return true;
 }
+
 
 void DungeonRoom::LoadTiles()
 {

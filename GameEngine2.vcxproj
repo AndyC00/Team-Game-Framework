@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClCompile Include="animatedsprite.cpp" />
     <ClCompile Include="ball.cpp" />
-    <ClCompile Include="dungeon1.cpp" />
+    <ClCompile Include="dungeon1scene.cpp" />
     <ClCompile Include="dungeonroom.cpp" />
     <ClCompile Include="EnemyS.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -172,7 +172,7 @@
   <ItemGroup>
     <ClInclude Include="animatedsprite.h" />
     <ClInclude Include="ball.h" />
-    <ClInclude Include="dungeon1.h" />
+    <ClInclude Include="dungeon1scene.h" />
     <ClInclude Include="dungeonroom.h" />
     <ClInclude Include="EnemyS.h" />
     <ClInclude Include="Entity.h" />
