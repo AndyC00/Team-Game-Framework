@@ -43,7 +43,7 @@ bool EnemyS::Initialise(Renderer& renderer)
 	//enemy spawning position:
 	int m_x = ((rand() % 2 == 0) ? (rand() % 890 + 10) : (rand() % 890 + 910));
 	int m_y = ((rand() % 2 == 0) ? (rand() % 490 + 10) : (rand() % 480 + 550));
-	m_position = Vector2(m_x, m_y);
+	//m_position = Vector2(m_x, m_y);
 	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
 
@@ -57,12 +57,12 @@ void EnemyS::Process(float deltaTime)
 		m_moveTimer += deltaTime;
 
 		//calculate if the player come within the enemy's attack range:
-		if (IsWithinRange)
+		/*if (IsWithinRange)
 		{
 			Attack();
 			//heading to the player:
 
-		}
+		}*/
 
 		if (m_moveTimer >= m_moveInterval)
 		{
@@ -120,10 +120,10 @@ bool EnemyS::IsNearBoundary(Vector2 m_position)
 }
 
 //todo: Player_position need to be passed to here
-bool EnemyS::IsWithinRange(Vector2 m_position, Vector2 Player_position)
+/*bool EnemyS::IsWithinRange(Vector2 m_position, Vector2 Player_position)
 {
 	
-}
+}*/
 
 void EnemyS::Attack()
 {
