@@ -1,6 +1,8 @@
 #include "DungeonRoom.h"
+#include "renderer.h"
 
-DungeonRoom::DungeonRoom() : nWidth(0), nHeight(0), roomID(0), pSprite(nullptr)
+DungeonRoom::DungeonRoom()
+    : nWidth(0), nHeight(0), roomID(0), m_pSpriteSheet(nullptr), m_indices(nullptr), m_solids(nullptr)
 {
 }
 
@@ -8,6 +10,7 @@ DungeonRoom::~DungeonRoom()
 {
     delete[] m_indices;
     delete[] m_solids;
+    delete m_pSpriteSheet;
 }
 
 int DungeonRoom::GetIndex(int x, int y)
@@ -52,5 +55,36 @@ bool DungeonRoom::CreateFromJSON(const std::string& filename)
         m_solids[i] = j["solids"][i];
     }
 
+    // Load the tiles
+    LoadTiles();
+
     return true;
+}
+
+void DungeonRoom::LoadTiles()
+{
+    // Load the sprite sheet
+    Texture* tileTexture = new Texture();
+    tileTexture->Initialise("assets/tileset.png"); // Path to your tileset texture
+
+    m_pSpriteSheet = new SpriteSheet();
+    m_pSpriteSheet->Initialise(*tileTexture, 32, 32); // Assuming each tile is 32x32 pixels
+}
+
+void DungeonRoom::Draw(Renderer& renderer)
+{
+    for (int y = 0; y < nHeight; ++y)
+    {
+        for (int x = 0; x < nWidth; ++x)
+        {
+            int tileIndex = GetIndex(x, y);
+
+            // Get the UV coordinates for this tile
+            float uMin, vMin, uMax, vMax;
+            m_pSpriteSheet->GetSpriteUV(tileIndex, uMin, vMin, uMax, vMax);
+
+            // Draw the tile using the renderer's fixed-function pipeline
+            renderer.DrawTile(x * 32, y * 32, 32, 32, uMin, vMin, uMax, vMax, m_pSpriteSheet->GetTexture());
+        }
+    }
 }

@@ -336,3 +336,22 @@ void Renderer::CreateStaticText(const char* pText, int pointsize)
 	pTexture->LoadTextTexture(pText, "font\\friendlyscribbles.ttf", pointsize);
 	m_pTextureManager->AddTexture(pText, pTexture);
 }
+
+void Renderer::DrawTile(int x, int y, int width, int height, float uMin, float vMin, float uMax, float vMax, Texture* texture)
+{
+	glEnable(GL_TEXTURE_2D);  // Enable 2D texturing
+
+	texture->SetActive();  // Bind the texture
+
+	// Set up the vertices and texture coordinates
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(uMin, vMax); glVertex2f(x, y);
+	glTexCoord2f(uMax, vMax); glVertex2f(x + width, y);
+	glTexCoord2f(uMax, vMin); glVertex2f(x + width, y + height);
+	glTexCoord2f(uMin, vMin); glVertex2f(x, y + height);
+
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);  // Disable 2D texturing
+}

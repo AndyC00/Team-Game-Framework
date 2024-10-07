@@ -11,6 +11,7 @@ struct SDL_Window;
 
 // Library includes: 
 #include <SDL.h>
+#include "texture.h"
 
 class Renderer
 {
@@ -37,6 +38,9 @@ public:
 	void DrawAnimatedSprite(AnimatedSprite& sprite, int frame);
 
 	void CreateStaticText(const char* pText, int pointsize);
+
+	void DrawTile(int x, int y, int width, int height, float uMin, float vMin, float uMax, float vMax, Texture* texture);
+
 
 protected:
 	bool InitialiseOpenGL(int screenWidth, int screenHeight);
