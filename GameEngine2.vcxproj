@@ -157,6 +157,9 @@
     <ClCompile Include="Magic.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="matrix4.cpp" />
+    <ClCompile Include="MeleeHitbox.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -189,6 +192,9 @@
     <ClInclude Include="logmanager.h" />
     <ClInclude Include="Magic.h" />
     <ClInclude Include="matrix4.h" />
+    <ClInclude Include="MeleeHitbox.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="TitleScene.h" />

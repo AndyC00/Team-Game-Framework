@@ -102,6 +102,13 @@
     <ClCompile Include="dungeon1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeHitbox.cpp">
     <ClCompile Include="Magic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -194,6 +201,13 @@
     <ClInclude Include="dungeon1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeHitbox.h">
     <ClInclude Include="Magic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
