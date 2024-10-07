@@ -3,6 +3,8 @@
 
 #include "Magic.h"
 #include "Entity.h"
+#include "Player.h"
+
 
 class EnemyS : public Entity
 {

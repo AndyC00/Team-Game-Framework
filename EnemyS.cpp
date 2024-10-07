@@ -1,6 +1,7 @@
 // This include:
 #include "EnemyS.h"
 #include "sprite.h"
+#include "Player.h"
 
 // Local includes:
 #include "entity.h"
@@ -16,6 +17,7 @@
 
 //how often for the enemy to shoot
 const float TimerTotal = 3.0f;
+Player m_pPlayer;
 
 EnemyS::EnemyS() :Entity(),
 m_moveTimer(0.0f),
@@ -65,7 +67,8 @@ void EnemyS::Process(float deltaTime)
 		m_moveTimer += deltaTime;
 
 		//calculate if the player come within the enemy's attack range:
-		if (1) //IsWithinRange
+		Vector2 PlayerPosition = m_pPlayer.Player_position;
+		if (IsWithinRange(m_position, PlayerPosition))
 		{
 			Shoot(deltaTime);
 			//heading to the player:
@@ -127,23 +130,27 @@ void EnemyS::Draw(Renderer& renderer)
 
 bool EnemyS::IsNearBoundary(Vector2 m_position)
 {
-	float margin = 35.0f; //the distance to trigger the function
+	float margin = 35.0f;		//the distance to trigger the function
 
 	return (m_position.x <= margin || m_position.x >= 1860.0f - margin ||
 		m_position.y <= margin || m_position.y >= 1060.0f - margin);
 }
 
-//todo: Player_position need to be passed to here
-bool EnemyS::IsWithinRange(Vector2 m_position, Vector2 Player_position)
+bool EnemyS::IsWithinRange(Vector2 m_position, Vector2 PlayerPosition)
 {
-	if (1)
+	PlayerPosition = m_pPlayer.Player_position;
+	float attackRange = 20.0f;			// the range of attack detection
+
+	float deltaX = m_position.x - PlayerPosition.x;
+	float deltaY = m_position.y - PlayerPosition.y;
+	float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+
+	if (distance <= attackRange)
 	{
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 void EnemyS::Shoot(float deltaTime)

@@ -25,9 +25,6 @@
     <ClCompile Include="matrix4.cpp">
       <Filter>Others</Filter>
     </ClCompile>
-    <ClCompile Include="MeleeHitbox.cpp">
-      <Filter>Others</Filter>
-    </ClCompile>
     <ClCompile Include="animatedsprite.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -94,6 +91,9 @@
     <ClCompile Include="TitleScene.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="MeleeHitbox.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -156,9 +156,6 @@
     <ClInclude Include="matrix4.h">
       <Filter>Others</Filter>
     </ClInclude>
-    <ClInclude Include="MeleeHitbox.h">
-      <Filter>Others</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -193,6 +190,9 @@
       <Filter>Others</Filter>
     </ClInclude>
     <ClInclude Include="TitleScene.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeHitbox.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

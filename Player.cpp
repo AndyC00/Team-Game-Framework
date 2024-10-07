@@ -73,7 +73,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     }
 
     // Update the position based on the movement vector and speed
-    m_position += movement * m_moveSpeed * deltaTime;
+    Player_position += movement * m_moveSpeed * deltaTime;
 
     // Get screen boundaries from the renderer
     float screenWidth = static_cast<float>(renderer.GetWidth());
@@ -84,24 +84,24 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     float spriteHeight = m_pSprite->GetHeight() * m_pSprite->GetScale();
 
     // Boundary check to keep the player within the screen
-    if (m_position.x < 0.0f)
+    if (Player_position.x < 0.0f)
     {
-        m_position.x = 0.0f;
+        Player_position.x = 0.0f;
     }
 
-    if (m_position.x + spriteWidth > screenWidth)
+    if (Player_position.x + spriteWidth > screenWidth)
     {
-        m_position.x = screenWidth - spriteWidth;
+        Player_position.x = screenWidth - spriteWidth;
     }
 
-    if (m_position.y < 0.0f)
+    if (Player_position.y < 0.0f)
     {
-        m_position.y = 0.0f;
+        Player_position.y = 0.0f;
     }
 
-    if (m_position.y + spriteHeight > screenHeight)
+    if (Player_position.y + spriteHeight > screenHeight)
     {
-        m_position.y = screenHeight - spriteHeight;
+        Player_position.y = screenHeight - spriteHeight;
     }
 
     // Weapon switching
@@ -175,7 +175,7 @@ void Player::Attack(Renderer& renderer)
 
         // Create a new melee hitbox
         MeleeHitbox* newMeleeHitbox = new MeleeHitbox();
-        if (newMeleeHitbox->Initialise(renderer, m_position, m_facingDirection))
+        if (newMeleeHitbox->Initialise(renderer, Player_position, m_facingDirection))
         {
             m_meleeHitboxes.push_back(newMeleeHitbox);
         }
@@ -187,7 +187,7 @@ void Player::Attack(Renderer& renderer)
 
         // Create a new projectile and store it
         Projectile* newProjectile = new Projectile();
-        if (newProjectile->Initialise(renderer, m_position, m_facingDirection))
+        if (newProjectile->Initialise(renderer, Player_position, m_facingDirection))
         {
             m_projectiles.push_back(newProjectile);
         }
