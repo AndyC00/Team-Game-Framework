@@ -8,11 +8,11 @@
 
 using json = nlohmann::json;
 
-class dungeonRoom
+class DungeonRoom
 {
 public:
-	dungeonRoom();
-	~dungeonRoom();
+	DungeonRoom();
+	~DungeonRoom();
 
 public:
 	int nWidth;

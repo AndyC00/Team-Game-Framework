@@ -142,6 +142,7 @@
     <ClCompile Include="animatedsprite.cpp" />
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="dungeon1.cpp" />
+    <ClCompile Include="dungeonroom.cpp" />
     <ClCompile Include="EnemyS.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="game.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="animatedsprite.h" />
     <ClInclude Include="ball.h" />
     <ClInclude Include="dungeon1.h" />
+    <ClInclude Include="dungeonroom.h" />
     <ClInclude Include="EnemyS.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="game.h" />
@@ -185,6 +187,7 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="inlinehelpers.h" />
     <ClInclude Include="inputsystem.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="logmanager.h" />
     <ClInclude Include="matrix4.h" />
     <ClInclude Include="renderer.h" />
