@@ -5,6 +5,7 @@
 // Local includes:
 #include "entity.h"
 #include "vector2.h"
+#include "Magic.h"
 
 // Library includes:
 #include "renderer.h"
@@ -13,6 +14,8 @@
 #include <iostream>
 #include <ctime> 
 
+//how often for the enemy to shoot
+const float TimerTotal = 3.0f;
 
 EnemyS::EnemyS() :Entity(),
 m_moveTimer(0.0f),
@@ -20,7 +23,9 @@ m_moveInterval(2.0f),
 m_speed(35.0f),
 m_moveDistance(50.0f),
 m_moveRange(80.0f),
-attack_range(30.0f)
+attack_range(30.0f),
+m_pMagic(nullptr),
+m_MagicTimer(0)
 {
 
 }
@@ -47,6 +52,9 @@ bool EnemyS::Initialise(Renderer& renderer)
 	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
 
+	m_pMagic = new Magic();
+	m_pMagic->Initialise(renderer);
+
 	return true;
 }
 
@@ -57,9 +65,9 @@ void EnemyS::Process(float deltaTime)
 		m_moveTimer += deltaTime;
 
 		//calculate if the player come within the enemy's attack range:
-		if (IsWithinRange)
+		if (1) //IsWithinRange
 		{
-			Attack();
+			Shoot(deltaTime);
 			//heading to the player:
 
 		}
@@ -111,6 +119,12 @@ void EnemyS::Process(float deltaTime)
 	}
 }
 
+void EnemyS::Draw(Renderer& renderer)
+{
+	m_pMagic->Draw(renderer);
+	Entity::Draw(renderer);
+}
+
 bool EnemyS::IsNearBoundary(Vector2 m_position)
 {
 	float margin = 35.0f; //the distance to trigger the function
@@ -122,10 +136,26 @@ bool EnemyS::IsNearBoundary(Vector2 m_position)
 //todo: Player_position need to be passed to here
 bool EnemyS::IsWithinRange(Vector2 m_position, Vector2 Player_position)
 {
-	
+	if (1)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
-void EnemyS::Attack()
+void EnemyS::Shoot(float deltaTime)
 {
-	
+	if (m_MagicTimer < 0)
+	{
+		m_pMagic->SetPosition(m_position, m_pSprite->GetAngle());
+		m_MagicTimer = TimerTotal;
+	}
+	else
+	{
+		m_pMagic->Process(deltaTime);
+		m_MagicTimer -= deltaTime;
+	}
 }

@@ -1,7 +1,7 @@
 #ifndef _ENEMYS_H_
 #define _ENEMYS_H_
 
-
+#include "Magic.h"
 #include "Entity.h"
 
 class EnemyS : public Entity
@@ -14,9 +14,10 @@ public:
 public:
 	bool Initialise(Renderer& renderer);
 	void Process(float deltaTime);
+	void Draw(Renderer& renderer);
 
 protected:
-	void Attack();
+	void Shoot(float deltaTime);
 	bool IsWithinRange(Vector2 m_position, Vector2 Player_position);
 
 private:
@@ -36,6 +37,9 @@ private:
 	float m_moveDistance;
 	float m_moveRange;
 	float attack_range;
+	float m_MagicTimer;
+
+	Magic* m_pMagic;
 };
 
 #endif // _ENEMYS_H_
