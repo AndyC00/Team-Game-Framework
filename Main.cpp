@@ -1,5 +1,6 @@
 // Library includes:
 #include <SDL.h>
+#include <ctime> 
 
 // Local includes: 
 #include "game.h" 
@@ -7,6 +8,8 @@
 
 int main(int argc, char* argv[]) 
 {
+    srand(static_cast<unsigned>(time(0)));
+
     Game& gameInstance = Game::GetInstance(); 
 
     if (!gameInstance.Initialise())
