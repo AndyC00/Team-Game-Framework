@@ -82,7 +82,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>$(SolutionDir)Assets\SDL2-2.0.22\include;$(SolutionDir)Assets\SDL2_image-2.6.1\include;$(SolutionDir)\Assets\glew-2.1.0\include;$(SolutionDir)\Assets\SDL2_ttf-2.22.0\include;$(SolutionDir)Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)Assets\SDL2-2.0.22\include;$(SolutionDir)Assets\SDL2_image-2.6.1\include;$(SolutionDir)Assets\glew-2.1.0\include;$(SolutionDir)Assets\SDL2_ttf-2.22.0\include;$(SolutionDir)Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
+>>>>>>> 406e4e6062dd4467c01386051c2458a810088722
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -99,7 +103,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>$(SolutionDir)Assets\SDL2-2.0.22\include;$(SolutionDir)Assets\SDL2_image-2.6.1\include;$(SolutionDir)\Assets\glew-2.1.0\include;$(SolutionDir)\Assets\SDL2_ttf-2.22.0\include;$(SolutionDir)Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)Assets\SDL2-2.0.22\include;$(SolutionDir)Assets\SDL2_image-2.6.1\include;$(SolutionDir)Assets\glew-2.1.0\include;$(SolutionDir)Assets\SDL2_ttf-2.22.0\include;$(SolutionDir)Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
+>>>>>>> 406e4e6062dd4467c01386051c2458a810088722
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
