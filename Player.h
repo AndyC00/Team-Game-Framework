@@ -25,25 +25,21 @@ public:
 protected:
 
 private:
-
-
     // Member data:
-public:
-    Vector2 Player_position;
-
-protected:
-
-private:
     Vector2 m_facingDirection;  // The direction the player is facing
     float m_moveSpeed;
     int m_currentWeapon;
     int m_lives;  // Player's remaining lives
     float m_attackCooldownRemaining;
     float m_attackCooldown;
-    
-
     std::vector<Projectile*> m_projectiles;  // Store projectiles
     std::vector<MeleeHitbox*> m_meleeHitboxes;  // Store melee hitboxes
+public:
+
+protected:
+
+private:
+
 };
 
 #endif // _PLAYER_H_

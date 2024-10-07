@@ -67,7 +67,7 @@ void EnemyS::Process(float deltaTime)
 		m_moveTimer += deltaTime;
 
 		//calculate if the player come within the enemy's attack range:
-		Vector2 PlayerPosition = m_pPlayer.Player_position;
+		Vector2 PlayerPosition = m_pPlayer.GetPosition();
 		if (IsWithinRange(m_position, PlayerPosition))
 		{
 			Shoot(deltaTime);
@@ -138,7 +138,7 @@ bool EnemyS::IsNearBoundary(Vector2 m_position)
 
 bool EnemyS::IsWithinRange(Vector2 m_position, Vector2 PlayerPosition)
 {
-	PlayerPosition = m_pPlayer.Player_position;
+	PlayerPosition = m_pPlayer.GetPosition();
 	float attackRange = 20.0f;			// the range of attack detection
 
 	float deltaX = m_position.x - PlayerPosition.x;

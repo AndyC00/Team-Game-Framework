@@ -73,7 +73,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     }
 
     // Update the position based on the movement vector and speed
-    Player_position += movement * m_moveSpeed * deltaTime;
+    m_position += movement * m_moveSpeed * deltaTime;
 
     // Get screen boundaries from the renderer
     float screenWidth = static_cast<float>(renderer.GetWidth());
@@ -84,24 +84,24 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     float spriteHeight = m_pSprite->GetHeight() * m_pSprite->GetScale();
 
     // Boundary check to keep the player within the screen
-    if (Player_position.x < 0.0f)
+    if (m_position.x < 0.0f)
     {
-        Player_position.x = 0.0f;
+        m_position.x = 0.0f;
     }
 
-    if (Player_position.x + spriteWidth > screenWidth)
+    if (m_position.x + spriteWidth > screenWidth)
     {
-        Player_position.x = screenWidth - spriteWidth;
+        m_position.x = screenWidth - spriteWidth;
     }
 
-    if (Player_position.y < 0.0f)
+    if (m_position.y < 0.0f)
     {
-        Player_position.y = 0.0f;
+        m_position.y = 0.0f;
     }
 
-    if (Player_position.y + spriteHeight > screenHeight)
+    if (m_position.y + spriteHeight > screenHeight)
     {
-        Player_position.y = screenHeight - spriteHeight;
+        m_position.y = screenHeight - spriteHeight;
     }
 
     // Weapon switching
@@ -132,11 +132,11 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     {
         (*it)->Process(deltaTime);
         // Remove "dead" projectiles
-        if (!(*it)->IsAlive())  
+        if (!(*it)->IsAlive())
         {
             delete* it;
             // Erase the projectile
-            it = m_projectiles.erase(it);  
+            it = m_projectiles.erase(it);
         }
         else
         {
@@ -150,11 +150,11 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
         (*it)->Process(deltaTime);
 
         // Remove "dead" melee hitboxes
-        if (!(*it)->IsAlive())  
+        if (!(*it)->IsAlive())
         {
             delete* it;
             // Erase the hitbox
-            it = m_meleeHitboxes.erase(it);  
+            it = m_meleeHitboxes.erase(it);
         }
         else
         {
@@ -169,25 +169,25 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
 void Player::Attack(Renderer& renderer)
 {
     // Melee attack
-    if (m_currentWeapon == 1)  
+    if (m_currentWeapon == 1)
     {
         std::cout << "Melee attack in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
         // Create a new melee hitbox
         MeleeHitbox* newMeleeHitbox = new MeleeHitbox();
-        if (newMeleeHitbox->Initialise(renderer, Player_position, m_facingDirection))
+        if (newMeleeHitbox->Initialise(renderer, m_position, m_facingDirection))
         {
             m_meleeHitboxes.push_back(newMeleeHitbox);
         }
     }
     // Projectile attack
-    else if (m_currentWeapon == 2)  
+    else if (m_currentWeapon == 2)
     {
         std::cout << "Shooting projectile in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
         // Create a new projectile and store it
         Projectile* newProjectile = new Projectile();
-        if (newProjectile->Initialise(renderer, Player_position, m_facingDirection))
+        if (newProjectile->Initialise(renderer, m_position, m_facingDirection))
         {
             m_projectiles.push_back(newProjectile);
         }
@@ -197,7 +197,7 @@ void Player::Attack(Renderer& renderer)
 void Player::Draw(Renderer& renderer)
 {
     // Draw the player
-    Entity::Draw(renderer);  
+    Entity::Draw(renderer);
 
     // Draw all projectiles
     for (auto projectile : m_projectiles)
