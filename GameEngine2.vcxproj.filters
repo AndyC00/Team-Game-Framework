@@ -54,7 +54,7 @@
     <ClCompile Include="scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scenecheckerboards.cpp">
+    <ClCompile Include="TitleScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vector2.cpp">
@@ -93,6 +93,25 @@
     <ClCompile Include="soundsystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeon1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeHitbox.cpp">
+    <ClCompile Include="Magic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="logmanager.h">
@@ -125,7 +144,7 @@
     <ClInclude Include="scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scenecheckerboards.h">
+    <ClInclude Include="TitleScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inlinehelpers.h">
@@ -171,6 +190,25 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="soundsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeon1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeHitbox.h">
+    <ClInclude Include="Magic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

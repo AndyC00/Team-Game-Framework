@@ -1,5 +1,5 @@
-#ifndef _SCENECHECKERBOARDS_H_
-#define _SCENECHECKERBOARDS_H_
+#ifndef _TITLESCENE_H_
+#define _TITLESCENE_H_
 
 //local includes:
 #include "scene.h"
@@ -9,12 +9,12 @@ class Renderer;
 class Sprite;
 
 //Class declaration:
-class SceneCheckerboards :public Scene
+class TitleScene :public Scene
 {
 	//member methods:
 public:
-	SceneCheckerboards();
-	virtual ~SceneCheckerboards();
+	TitleScene();
+	virtual ~TitleScene();
 
 	virtual bool Initialise(Renderer& renderer);
 	virtual void Process(float deltaTime, InputSystem& inputSystem);
@@ -23,14 +23,14 @@ public:
 protected:
 
 private:
-	SceneCheckerboards(const SceneCheckerboards& sceneCheckerboards);
-	SceneCheckerboards& operator = (const SceneCheckerboards& sceneCheckerboards);
+	TitleScene(const TitleScene& TitleScene);
+	TitleScene& operator = (const TitleScene& TitleScene);
 
 //member data:
 public:
 	virtual void DebugDraw();
+
 protected:
-	Sprite* m_pCorners[4];
 	Sprite* m_pCentre;
 
 	float m_angle;
@@ -40,4 +40,4 @@ private:
 
 };
 
-#endif // _SCENECHECKERBOARDS_H_
+#endif // _TITLESCENE_H_

@@ -8,7 +8,7 @@
 #include "logmanager.h" 
 #include "shader.h" 
 #include "vertexarray.h" 
-#include "sprite.h" 
+#include "sprite.h"
 #include "matrix4.h"
 #include "animatedsprite.h"
 

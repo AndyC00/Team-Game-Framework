@@ -82,12 +82,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Developing_Projects\GameEngine2\Assets\SDL2-2.0.22\include;D:\Developing_Projects\GameEngine2\Assets\SDL2_image-2.6.1\include;D:\Developing_Projects\GameEngine2\Assets\glew-2.1.0\include;D:\Developing_Projects\GameEngine2\Assets\SDL2_ttf-2.22.0\include;D:\Developing_Projects\GameEngine2\Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Assets\SDL2-2.0.22\include;$(SolutionDir)Assets\SDL2_image-2.6.1\include;$(SolutionDir)Assets\glew-2.1.0\include;$(SolutionDir)Assets\SDL2_ttf-2.22.0\include;$(SolutionDir)Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Developing_Projects\GameEngine2\Assets\FMOD Studio API Windows\api\core\lib\x86;D:\Developing_Projects\GameEngine2\Assets\SDL2-2.0.22\lib\x86;D:\Developing_Projects\GameEngine2\Assets\SDL2_image-2.6.1\lib\x86;D:\Developing_Projects\GameEngine2\Assets\glew-2.1.0\lib\x86;D:\Developing_Projects\GameEngine2\Assets\SDL2_ttf-2.22.0\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Assets\FMOD Studio API Windows\api\core\lib\x86;$(SolutionDir)Assets\SDL2-2.0.22\lib\x86;$(SolutionDir)Assets\SDL2_image-2.6.1\lib\x86;$(SolutionDir)Assets\glew-2.1.0\lib\x86;$(SolutionDir)Assets\SDL2_ttf-2.22.0\lib\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;glew32.lib;opengl32.lib;SDL2_ttf.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -99,14 +99,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Developing_Projects\GameEngine2\Assets\SDL2-2.0.22\include;D:\Developing_Projects\GameEngine2\Assets\SDL2_image-2.6.1\include;D:\Developing_Projects\GameEngine2\Assets\glew-2.1.0\include;D:\Developing_Projects\GameEngine2\Assets\SDL2_ttf-2.22.0\include;D:\Developing_Projects\GameEngine2\Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Assets\SDL2-2.0.22\include;$(SolutionDir)Assets\SDL2_image-2.6.1\include;$(SolutionDir)Assets\glew-2.1.0\include;$(SolutionDir)Assets\SDL2_ttf-2.22.0\include;$(SolutionDir)Assets\FMOD Studio API Windows\api\core\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Developing_Projects\GameEngine2\Assets\SDL2-2.0.22\lib\x86;D:\Developing_Projects\GameEngine2\Assets\SDL2_image-2.6.1\lib\x86;D:\Developing_Projects\GameEngine2\Assets\glew-2.1.0\lib\x86;D:\Developing_Projects\GameEngine2\Assets\SDL2_ttf-2.22.0\lib\x86;D:\Developing_Projects\GameEngine2\Assets\FMOD Studio API Windows\api\core\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Assets\SDL2-2.0.22\lib\x86;$(SolutionDir)Assets\SDL2_image-2.6.1\lib\x86;$(SolutionDir)Assets\glew-2.1.0\lib\x86;$(SolutionDir)Assets\SDL2_ttf-2.22.0\lib\x86;$(SolutionDir)Assets\FMOD Studio API Windows\api\core\lib\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;glew32.lib;opengl32.lib;SDL2_ttf.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -141,6 +141,9 @@
   <ItemGroup>
     <ClCompile Include="animatedsprite.cpp" />
     <ClCompile Include="ball.cpp" />
+    <ClCompile Include="dungeon1.cpp" />
+    <ClCompile Include="EnemyS.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -151,11 +154,15 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="inputsystem.cpp" />
     <ClCompile Include="logmanager.cpp" />
+    <ClCompile Include="Magic.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="matrix4.cpp" />
+    <ClCompile Include="MeleeHitbox.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="scene.cpp" />
-    <ClCompile Include="scenecheckerboards.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="soundsystem.cpp" />
     <ClCompile Include="sprite.cpp" />
@@ -167,6 +174,9 @@
   <ItemGroup>
     <ClInclude Include="animatedsprite.h" />
     <ClInclude Include="ball.h" />
+    <ClInclude Include="dungeon1.h" />
+    <ClInclude Include="EnemyS.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -180,10 +190,14 @@
     <ClInclude Include="inlinehelpers.h" />
     <ClInclude Include="inputsystem.h" />
     <ClInclude Include="logmanager.h" />
+    <ClInclude Include="Magic.h" />
     <ClInclude Include="matrix4.h" />
+    <ClInclude Include="MeleeHitbox.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="scene.h" />
-    <ClInclude Include="scenecheckerboards.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="soundsystem.h" />
     <ClInclude Include="sprite.h" />
