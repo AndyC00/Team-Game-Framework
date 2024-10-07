@@ -20,7 +20,7 @@ public:
 
 protected:
 	void Shoot(float deltaTime);
-	bool IsWithinRange(Vector2 m_position, Vector2 Player_position);
+	bool IsWithinRange(Vector2 m_position);
 
 private:
 	bool IsNearBoundary(Vector2 m_position);
