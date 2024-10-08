@@ -47,17 +47,6 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
     m_pCentre->SetX(SCREEN_WIDTH / 2);
     m_pCentre->SetY(SCREEN_HEIGHT / 2);
 
-    // Spawn a setting number of enemies:
-    for (int i = 0; i < 10; i++)
-    {
-        EnemyS* m_Enemy1 = new EnemyS();
-        m_Enemy1->Initialise(renderer);
-        m_Enemies1.push_back(m_Enemy1);
-
-        m_Enemy1->GetPosition().x = renderer.GetWidth() / 2.0f;
-        m_Enemy1->GetPosition().y = renderer.GetHeight() / 2.0f;
-    }
-
     // Initialize the player:
     m_pPlayer = new Player();
     if (!m_pPlayer->Initialise(renderer))
@@ -67,11 +56,25 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
     m_pPlayer->GetPosition().x = SCREEN_WIDTH / 2;
     m_pPlayer->GetPosition().y = SCREEN_HEIGHT / 2;
 
+    // Spawn a setting number of enemies:
+    for (int i = 0; i < 10; i++)
+    {
+        EnemyS* m_Enemy1 = new EnemyS(m_pPlayer);
+        m_Enemy1->Initialise(renderer);
+        m_Enemies1.push_back(m_Enemy1);
+
+        m_Enemy1->GetPosition().x = renderer.GetWidth() / 2.0f;
+        m_Enemy1->GetPosition().y = renderer.GetHeight() / 2.0f;
+    }
+
     return true;
 }
 
 void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 {
+    // Process the player input and movement
+    m_pPlayer->Process(deltaTime, inputSystem, *m_pRenderer);
+
     m_pCentre->SetAngle(0);
     m_pCentre->Process(deltaTime);
 
@@ -79,9 +82,6 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
     {
         m_Enemy1->Process(deltaTime);
     }
-
-    // Process the player input and movement
-    m_pPlayer->Process(deltaTime, inputSystem,*m_pRenderer);
 }
 
 void Dungeon1Scene::Draw(Renderer& renderer)

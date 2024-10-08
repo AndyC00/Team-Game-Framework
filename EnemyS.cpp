@@ -17,9 +17,9 @@
 
 //how often for the enemy to shoot
 const float TimerTotal = 3.0f;
-Player m_pPlayer;
 
-EnemyS::EnemyS() :Entity(),
+EnemyS::EnemyS(Player* player) :Entity(),
+m_pPlayer(player),
 m_moveTimer(0.0f),
 m_moveInterval(2.0f),
 m_speed(35.0f),
@@ -137,7 +137,11 @@ bool EnemyS::IsNearBoundary(Vector2 enemyPosition)
 
 bool EnemyS::IsWithinRange(Vector2 enemyPosition)
 {
-	Vector2 PlayerPosition = m_pPlayer.GetPosition();
+	if (m_pPlayer == nullptr)
+	{
+		return false;
+	}
+	Vector2 PlayerPosition = m_pPlayer->GetPosition();
 	float attackRange = 20.0f;			// the range of attack detection
 
 	float deltaX = enemyPosition.x - PlayerPosition.x;

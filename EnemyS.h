@@ -9,7 +9,7 @@
 class EnemyS : public Entity
 {
 public:
-	EnemyS();
+	EnemyS(Player* player);
 	~EnemyS();
 
 	//member methods:
@@ -43,6 +43,7 @@ private:
 	float m_MagicTimer;
 
 	Magic* m_pMagic;
+	Player* m_pPlayer;
 };
 
 #endif // _ENEMYS_H_
