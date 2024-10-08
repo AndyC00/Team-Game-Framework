@@ -30,7 +30,7 @@ Entity::~Entity()
 bool Entity::Initialise(Renderer& renderer, const char* pcFilename)
 {
     m_pSprite = renderer.CreateSprite(pcFilename); // replace the path with an actual sprite path
-    m_pSprite->SetScale(0.2f);
+    m_pSprite->SetScale(1.0f);
     m_pSprite->SetAngle(0.0f);
 
     if (!m_pSprite)

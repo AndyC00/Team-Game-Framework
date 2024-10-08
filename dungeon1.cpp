@@ -13,11 +13,11 @@
 #include <cassert>
 
 Dungeon1Scene::Dungeon1Scene() :
-    m_pCentre(0),
-    m_angle(0.0f),
-    m_rotationSpeed(0.0f),
-    m_Enemy1(nullptr),
-    m_pPlayer(nullptr) // Initialize the player pointer to null
+	m_pCentre(0),
+	m_angle(0.0f),
+	m_rotationSpeed(0.0f),
+	m_Enemy1(nullptr),
+  m_pPlayer(nullptr)
 {
 
 }

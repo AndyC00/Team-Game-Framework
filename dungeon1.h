@@ -15,7 +15,6 @@ class Renderer;
 class Sprite;
 class EnemyS;
 class Player;
-class Renderer;
 
 // Class declaration:
 class Dungeon1Scene : public Scene
