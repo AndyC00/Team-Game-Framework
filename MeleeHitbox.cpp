@@ -32,7 +32,7 @@ void MeleeHitbox::Process(float deltaTime)
         m_bAlive = false;  // Mark hitbox as dead when its lifespan ends
     }
 
-    Entity::Process(deltaTime);  // Update position, if needed
+    Entity::Process(deltaTime);  // Update position
 }
 
 void MeleeHitbox::Draw(Renderer& renderer)

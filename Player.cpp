@@ -37,39 +37,44 @@ bool Player::Initialise(Renderer& renderer)
     return true;
 }
 
+
 void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer)
 {
     // Initialize the movement vector
     Vector2 movement(0.0f, 0.0f);
 
-    // Check for movement input and accumulate movement in respective directions
-    if (inputSystem.GetKeyState(SDL_SCANCODE_W) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_W) == BS_HELD)
+    // When melee attack the player stand still
+    if (!(m_currentWeapon == 1 && m_attackCooldownRemaining > 0.0f))
     {
-        // Move up
-        movement.y -= 1.0f;
-        // Face up
-        m_facingDirection.Set(0.0f, -1.0f);
-    }
-    if (inputSystem.GetKeyState(SDL_SCANCODE_S) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_S) == BS_HELD)
-    {
-        // Move down
-        movement.y += 1.0f;
-        // Face down
-        m_facingDirection.Set(0.0f, 1.0f);
-    }
-    if (inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_HELD)
-    {
-        // Move left
-        movement.x -= 1.0f;
-        // Face left
-        m_facingDirection.Set(-1.0f, 0.0f);
-    }
-    if (inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_HELD)
-    {
-        // Move right
-        movement.x += 1.0f;
-        // Face right
-        m_facingDirection.Set(1.0f, 0.0f);
+        // Check for movement input and accumulate movement in respective directions
+        if (inputSystem.GetKeyState(SDL_SCANCODE_W) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_W) == BS_HELD)
+        {
+            // Move up
+            movement.y -= 1.0f;
+            // Face up
+            m_facingDirection.Set(0.0f, -1.0f);
+        }
+        if (inputSystem.GetKeyState(SDL_SCANCODE_S) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_S) == BS_HELD)
+        {
+            // Move down
+            movement.y += 1.0f;
+            // Face down
+            m_facingDirection.Set(0.0f, 1.0f);
+        }
+        if (inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_HELD)
+        {
+            // Move left
+            movement.x -= 1.0f;
+            // Face left
+            m_facingDirection.Set(-1.0f, 0.0f);
+        }
+        if (inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_HELD)
+        {
+            // Move right
+            movement.x += 1.0f;
+            // Face right
+            m_facingDirection.Set(1.0f, 0.0f);
+        }
     }
 
     // Update the position based on the movement vector and speed
@@ -116,7 +121,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
         m_currentWeapon = 2;
     }
 
-    // Attack when spacebar is pressed
+    // Handle attack cooldown
     m_attackCooldownRemaining -= deltaTime;
     if (m_attackCooldownRemaining <= 0.0f)
     {
@@ -132,11 +137,11 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     {
         (*it)->Process(deltaTime);
         // Remove "dead" projectiles
-        if (!(*it)->IsAlive())  
+        if (!(*it)->IsAlive())
         {
             delete* it;
             // Erase the projectile
-            it = m_projectiles.erase(it);  
+            it = m_projectiles.erase(it);
         }
         else
         {
@@ -150,11 +155,11 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
         (*it)->Process(deltaTime);
 
         // Remove "dead" melee hitboxes
-        if (!(*it)->IsAlive())  
+        if (!(*it)->IsAlive())
         {
             delete* it;
             // Erase the hitbox
-            it = m_meleeHitboxes.erase(it);  
+            it = m_meleeHitboxes.erase(it);
         }
         else
         {
