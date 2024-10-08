@@ -33,6 +33,7 @@ protected:
 
 private:
 	Vector2 m_targetPosition;
+	Vector2 enemyPosition;
 	float m_speed;
 	float m_moveTimer;
 	float m_moveInterval;
