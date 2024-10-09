@@ -182,6 +182,7 @@ void Player::Attack(Renderer& renderer)
         MeleeHitbox* newMeleeHitbox = new MeleeHitbox();
         if (newMeleeHitbox->Initialise(renderer, m_position, m_facingDirection))
         {
+            
             m_meleeHitboxes.push_back(newMeleeHitbox);
         }
     }
