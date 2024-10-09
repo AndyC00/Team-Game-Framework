@@ -13,8 +13,18 @@ Player::Player()
     m_lives(3),
     m_currentWeapon(1),
     m_attackCooldown(0.3f),
-    m_attackCooldownRemaining(0.0f)
+    m_attackCooldownRemaining(0.0f),
+    m_pFmodSystem(nullptr),
+    m_pMeleeSound(nullptr),
+    m_pShootSound(nullptr)
 {
+    // Initialize FMOD system
+    FMOD::System_Create(&m_pFmodSystem);
+    m_pFmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
+
+    // Load shoot sound
+    m_pFmodSystem->createSound("sounds\\Player_melee.mp3", FMOD_DEFAULT, 0, &m_pMeleeSound);
+    m_pFmodSystem->createSound("sounds\\Player_gunshot.mp3", FMOD_DEFAULT, 0, &m_pShootSound);
 }
 
 Player::~Player()
@@ -28,6 +38,11 @@ Player::~Player()
     {
         delete melee;
     }
+
+    m_pShootSound->release();
+    m_pMeleeSound->release();
+    m_pFmodSystem->close();
+    m_pFmodSystem->release();
 }
 
 bool Player::Initialise(Renderer& renderer)
@@ -67,6 +82,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
             movement.x -= 1.0f;
             // Face left
             m_facingDirection.Set(-1.0f, 0.0f);
+           
         }
         if (inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_HELD)
         {
@@ -184,6 +200,8 @@ void Player::Attack(Renderer& renderer)
         {
             
             m_meleeHitboxes.push_back(newMeleeHitbox);
+            m_pFmodSystem->playSound(m_pMeleeSound, 0, false, nullptr);
+            m_pFmodSystem->update();
         }
     }
     // Projectile attack
@@ -196,6 +214,9 @@ void Player::Attack(Renderer& renderer)
         if (newProjectile->Initialise(renderer, m_position, m_facingDirection))
         {
             m_projectiles.push_back(newProjectile);
+            // Play shooting sound
+            m_pFmodSystem->playSound(m_pShootSound, 0, false, nullptr);
+            m_pFmodSystem->update();
         }
     }
 }

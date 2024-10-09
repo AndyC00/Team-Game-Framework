@@ -18,7 +18,12 @@ bool MeleeHitbox::Initialise(Renderer& renderer, const Vector2& position, const 
     m_position = position + direction * 15.0f;
     m_velocity = direction * 100.0f;  // Move in the direction the player is facing
     m_pSprite = renderer.CreateSprite("Sprites\\slash.png");
-    if (direction.x == 1 && direction.y == 0 || direction.x == 0 && direction.y == -1)
+    if (direction.x == 1 && direction.y == 0)
+    {
+        m_pSprite->SetScale(-0.2f);
+        m_pSprite->SetAngle(90.0f);
+    }
+    else if (direction.x == 0 && direction.y == -1)
     {
         m_pSprite->SetScale(-0.2f);
     }
