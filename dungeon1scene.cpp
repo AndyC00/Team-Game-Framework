@@ -1,6 +1,7 @@
 #include "dungeon1scene.h"
 #include "renderer.h"
 #include "imgui/imgui.h"
+#include <iostream> // Include iostream for std::cerr and std::endl
 
 Dungeon1Scene::Dungeon1Scene() : m_dungeonRoom()
 {
@@ -13,11 +14,7 @@ Dungeon1Scene::~Dungeon1Scene()
 bool Dungeon1Scene::Initialise(Renderer& renderer)
 {
     // Initialize the dungeon room
-    if (!m_dungeonRoom.CreateFromJSON("assets/room_data.json"))
-    {
-        std::cerr << "Failed to load dungeon room!" << std::endl;
-        return false;
-    }
+    m_dungeonRoom.LoadTiles(); // Use LoadTiles instead of CreateFromJSON
 
     return true;
 }

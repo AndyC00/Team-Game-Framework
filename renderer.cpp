@@ -346,10 +346,10 @@ void Renderer::DrawTile(int x, int y, int width, int height, float uMin, float v
 	// Set up the vertices and texture coordinates
 	glBegin(GL_QUADS);
 
-	glTexCoord2f(uMin, vMax); glVertex2f(x, y);
-	glTexCoord2f(uMax, vMax); glVertex2f(x + width, y);
-	glTexCoord2f(uMax, vMin); glVertex2f(x + width, y + height);
-	glTexCoord2f(uMin, vMin); glVertex2f(x, y + height);
+	glTexCoord2f(uMin, vMax); glVertex2f(static_cast<GLfloat>(x), static_cast<GLfloat>(y));
+	glTexCoord2f(uMax, vMax); glVertex2f(static_cast<GLfloat>(x + width), static_cast<GLfloat>(y));
+	glTexCoord2f(uMax, vMin); glVertex2f(static_cast<GLfloat>(x + width), static_cast<GLfloat>(y + height));
+	glTexCoord2f(uMin, vMin); glVertex2f(static_cast<GLfloat>(x), static_cast<GLfloat>(y + height));
 
 	glEnd();
 

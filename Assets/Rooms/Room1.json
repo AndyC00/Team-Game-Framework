@@ -3,7 +3,7 @@
   "width": 10,
   "height": 8,
   "spritesheet": {
-    "file": "assets/tileset.png",
+    "file": "Sprites\\tileset.png",
     "tileWidth": 32,
     "tileHeight": 32
   },
