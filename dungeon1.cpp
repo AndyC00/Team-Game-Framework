@@ -63,7 +63,6 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 		EnemyS* m_Enemy1 = new EnemyS(m_pPlayer);
 		m_Enemy1->Initialise(renderer);
 		m_Enemies1.push_back(m_Enemy1);
-
 	}
 
 	return true;

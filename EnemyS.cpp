@@ -59,6 +59,7 @@ bool EnemyS::Initialise(Renderer& renderer)
 	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
 
+
 	return true;
 }
 
@@ -204,4 +205,6 @@ void EnemyS::CreateMagic()
 		m_pMagic->SetPosition(m_position, angle);
 
 		m_MagicTimer = 2.0f;
+
+		std::cout << "Magic created at position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
 }

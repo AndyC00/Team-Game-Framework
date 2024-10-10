@@ -9,6 +9,7 @@
 #include "logmanager.h"
 
 #include <cmath>
+#include <iostream>
 
 
 Magic::Magic()
@@ -38,7 +39,7 @@ bool Magic::Initialise(Renderer& renderer)
 		newMagic = nullptr;
 	}
 
-	newMagic = m_pRenderer->CreateAnimatedSprite("Sprites\\explosion.png");
+	newMagic = m_pRenderer->CreateAnimatedSprite("Sprites\\fireExplosion.png");
 
 	if (newMagic)
 	{
@@ -65,6 +66,11 @@ void Magic::SetPosition(const Vector2& position, float angle)
 	float angleInRadians = -m_angle * M_PI / 180.0f;
 	m_velocity.x = sin(angleInRadians) * SPEED;
 	m_velocity.y = cos(angleInRadians) * SPEED;
+
+	//std::cout << "Magic SetPosition called:" << std::endl;
+	//std::cout << "Position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
+	//std::cout << "Angle: " << m_angle << " degrees (" << angleInRadians << " radians)" << std::endl;
+	//std::cout << "Velocity: (" << m_velocity.x << ", " << m_velocity.y << ")" << std::endl;
 }
 
 void Magic::Process(float deltaTime)
@@ -79,6 +85,7 @@ void Magic::Process(float deltaTime)
 
 void Magic::Draw(Renderer& renderer)
 {
+	//std::cout << "Magic::Draw called at position (" << m_position.x << ", " << m_position.y << ")." << std::endl;
 	newMagic->Draw(renderer);
 }
 
