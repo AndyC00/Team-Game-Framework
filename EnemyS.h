@@ -44,6 +44,7 @@ private:
 
 	Magic* m_pMagic;
 	Player* m_pPlayer;
+	Renderer* m_pRenderer;
 };
 
 #endif // _ENEMYS_H_

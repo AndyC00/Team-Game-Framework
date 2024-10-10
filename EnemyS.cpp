@@ -7,6 +7,7 @@
 #include "vector2.h"
 #include "Magic.h"
 #include "Player.h"
+#include "animatedsprite.h"
 
 // Library includes:
 #include "renderer.h"
@@ -15,30 +16,34 @@
 #include <iostream>
 #include <ctime> 
 
-//how often for the enemy to shoot
-const float TimerTotal = 3.0f;
-
 EnemyS::EnemyS(Player* player) :Entity(),
+m_pRenderer(nullptr),
 m_pPlayer(player),
 m_moveTimer(0.0f),
 m_moveInterval(2.0f),
 m_speed(35.0f),
 m_moveDistance(50.0f),
 m_moveRange(80.0f),
-attack_range(30.0f),
+attack_range(0.0f),
 m_pMagic(nullptr),
-m_MagicTimer(0)
+m_MagicTimer(2.0f)
 {
 
 }
 
 EnemyS::~EnemyS()
 {
-
+	if (m_pMagic)
+	{
+		delete m_pMagic;
+		m_pMagic = nullptr;
+	}
 }
 
 bool EnemyS::Initialise(Renderer& renderer)
 {
+	m_pRenderer = &renderer;
+
 	const char* pcFilename = "Sprites\\skeleton.png";
 
 	if (!Entity::Initialise(renderer, pcFilename))
@@ -66,7 +71,6 @@ void EnemyS::Process(float deltaTime)
 	{
 		m_moveTimer += deltaTime;
 
-		//calculate if the player come within the enemy's attack range:
 		if (IsWithinRange(enemyPosition))
 		{
 			Shoot(deltaTime);
@@ -123,13 +127,17 @@ void EnemyS::Process(float deltaTime)
 
 void EnemyS::Draw(Renderer& renderer)
 {
-	m_pMagic->Draw(renderer);
+	if (m_pMagic)
+	{
+		m_pMagic->Draw(renderer);
+	}
+
 	Entity::Draw(renderer);
 }
 
 bool EnemyS::IsNearBoundary(Vector2 enemyPosition)
 {
-	float margin = 35.0f; //the distance to trigger the function
+	float margin = 35.0f;	//the distance to trigger the function
 
 	return (enemyPosition.x <= margin || enemyPosition.x >= 1860.0f - margin ||
 		enemyPosition.y <= margin || enemyPosition.y >= 1060.0f - margin);
@@ -142,7 +150,7 @@ bool EnemyS::IsWithinRange(Vector2 enemyPosition)
 		return false;
 	}
 	Vector2 PlayerPosition = m_pPlayer->GetPosition();
-	float attackRange = 20.0f;			// the range of attack detection
+	float attackRange = 30.0f;			// the range of attack detection
 
 	float deltaX = enemyPosition.x - PlayerPosition.x;
 	float deltaY = enemyPosition.y - PlayerPosition.y;
@@ -158,14 +166,31 @@ bool EnemyS::IsWithinRange(Vector2 enemyPosition)
 
 void EnemyS::Shoot(float deltaTime)
 {
-	if (m_MagicTimer < 0)
+	if (m_pMagic)
 	{
-		m_pMagic->SetPosition(enemyPosition, m_pSprite->GetAngle());
-		m_MagicTimer = TimerTotal;
+		m_pMagic->Process(deltaTime);
+		if (!m_pMagic->IsAnimating())
+		{
+			delete m_pMagic;
+			m_pMagic = nullptr;
+			m_MagicTimer = 2.0f; //reset the timer
+		}
 	}
 	else
 	{
-		m_pMagic->Process(deltaTime);
 		m_MagicTimer -= deltaTime;
+
+		if (m_MagicTimer <= 0.0f)
+		{
+			m_pMagic = new Magic();
+			m_pMagic->Initialise(*m_pRenderer);
+
+			Vector2 direction = m_pPlayer->GetPosition() - enemyPosition;
+			direction.Normalise();
+			float angle = atan2f(direction.y, direction.x) * (180.0f / static_cast<float>(M_PI));
+
+			m_pMagic->SetPosition(enemyPosition, angle);
+
+		}
 	}
 }
