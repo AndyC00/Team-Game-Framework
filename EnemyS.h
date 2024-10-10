@@ -19,8 +19,8 @@ public:
 	void Draw(Renderer& renderer);
 
 protected:
-	void Shoot(float deltaTime);
-	bool IsWithinRange(Vector2 m_position);
+	void CreateMagic();
+	bool IsWithinRange();
 
 private:
 	bool IsNearBoundary(Vector2 m_position);
@@ -39,6 +39,7 @@ private:
 	float m_moveDistance;
 	float m_moveRange;
 	float m_MagicTimer;
+	float m_attackRange;
 
 	Magic* m_pMagic;
 	Player* m_pPlayer;

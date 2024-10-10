@@ -7,14 +7,13 @@
 #include "vector2.h"
 #include "Magic.h"
 #include "Player.h"
-#include "animatedsprite.h"
 
 // Library includes:
 #include "renderer.h"
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
-#include <ctime> 
+
 
 EnemyS::EnemyS(Player* player) :Entity(),
 m_pRenderer(nullptr),
@@ -25,9 +24,10 @@ m_speed(35.0f),
 m_moveDistance(50.0f),
 m_moveRange(80.0f),
 m_pMagic(nullptr),
-m_MagicTimer(2.0f)
+m_MagicTimer(2.0f),
+m_attackRange(80.0f)		// the range of attack detection
 {
-
+	m_bAlive = true;
 }
 
 EnemyS::~EnemyS()
@@ -54,6 +54,7 @@ bool EnemyS::Initialise(Renderer& renderer)
 	//enemy spawning position:
 	int m_x = ((rand() % 2 == 0) ? (rand() % 890 + 10) : (rand() % 890 + 910));
 	int m_y = ((rand() % 2 == 0) ? (rand() % 490 + 10) : (rand() % 480 + 550));
+
 	m_position = Vector2(m_x, m_y);
 	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
@@ -66,6 +67,8 @@ void EnemyS::Process(float deltaTime)
 	if (IsAlive())
 	{
 		//enemy attack:
+		m_MagicTimer -= deltaTime;
+
 		if (m_pMagic)
 		{
 			m_pMagic->Process(deltaTime);
@@ -76,36 +79,34 @@ void EnemyS::Process(float deltaTime)
 				m_MagicTimer = 2.0f; //reset the timer
 			}
 		}
-		else
+		else if (m_MagicTimer <= 0.0f && IsWithinRange())
 		{
-			m_MagicTimer -= deltaTime;
-			if (IsWithinRange(m_position))
-			{
-				Shoot(deltaTime);
-			}
+			CreateMagic();
 		}
 
-
 		//enemy movement:
-		m_moveTimer += deltaTime;
-
-		if (m_moveTimer >= m_moveInterval)
+		if (IsWithinRange())
 		{
-			if (IsWithinRange(m_position))
-			{
-				//heading towards the player if within range:
-				Vector2 directionToPlayer = m_pPlayer->GetPosition() - m_position;
-				directionToPlayer.Normalise();
-				m_position += directionToPlayer * m_speed * deltaTime;
-			}
-			else
+			//heading towards the player if within range:
+			m_targetPosition = m_pPlayer->GetPosition();
+			Vector2 directionToPlayer = m_targetPosition - m_position;
+
+			float length = directionToPlayer.Length();
+			//std::cout << "Direction Length: " << length << std::endl;
+
+			directionToPlayer.Normalise();
+			m_position += directionToPlayer * m_speed * deltaTime;
+		}
+		else
+		{
+			m_moveTimer += deltaTime;
+
+			if (m_moveTimer >= m_moveInterval)
 			{
 				m_moveTimer = 0.0f;
 
 				float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
-
 				Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
-
 				Vector2 potentialPosition = m_position + displacement;
 
 				if ((potentialPosition - m_position).Length() <= m_moveRange)
@@ -142,8 +143,13 @@ void EnemyS::Process(float deltaTime)
 
 		m_pSprite->SetX(static_cast<int>(m_position.x));
 		m_pSprite->SetY(static_cast<int>(m_position.y));
-
+		//std::cout << "Enemy Position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
 	}
+	else
+	{
+		std::cout << "Enemy failed to process!" << std::endl;
+	}
+
 }
 
 void EnemyS::Draw(Renderer& renderer)
@@ -164,31 +170,30 @@ bool EnemyS::IsNearBoundary(Vector2 m_position)
 		m_position.y <= margin || m_position.y >= 1060.0f - margin);
 }
 
-bool EnemyS::IsWithinRange(Vector2 m_position)
+bool EnemyS::IsWithinRange()
 {
 	if (m_pPlayer == nullptr)
 	{
+		std::cout << "Can't find Player!" << std::endl;
 		return false;
 	}
 	Vector2 PlayerPosition = m_pPlayer->GetPosition();
-	float attackRange = 30.0f;			// the range of attack detection
 
 	float deltaX = m_position.x - PlayerPosition.x;
 	float deltaY = m_position.y - PlayerPosition.y;
 	float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
 
-	if (distance <= attackRange)
-	{
-		return true;
-	}
-
-	return false;
+	return distance <= m_attackRange;
 }
 
-void EnemyS::Shoot(float deltaTime)
+void EnemyS::CreateMagic()
 {
-	if (m_MagicTimer <= 0.0f)
-	{
+		if (m_pMagic)
+		{
+			delete m_pMagic;
+			m_pMagic = nullptr;
+		}
+
 		m_pMagic = new Magic();
 		m_pMagic->Initialise(*m_pRenderer);
 
@@ -199,5 +204,4 @@ void EnemyS::Shoot(float deltaTime)
 		m_pMagic->SetPosition(m_position, angle);
 
 		m_MagicTimer = 2.0f;
-	}
 }
