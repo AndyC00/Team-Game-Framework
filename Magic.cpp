@@ -63,9 +63,9 @@ void Magic::SetPosition(const Vector2& position, float angle)
 	m_angle = angle;
 
 	const float SPEED = 300;
-	float angleInRadians = -m_angle * M_PI / 180.0f;
-	m_velocity.x = sin(angleInRadians) * SPEED;
-	m_velocity.y = cos(angleInRadians) * SPEED;
+	float angleInRadians = m_angle * M_PI / 180.0f;
+	m_velocity.x = cos(angleInRadians) * SPEED;
+	m_velocity.y = sin(angleInRadians) * SPEED;
 
 	//std::cout << "Magic SetPosition called:" << std::endl;
 	//std::cout << "Position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
