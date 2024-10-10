@@ -33,13 +33,11 @@ protected:
 
 private:
 	Vector2 m_targetPosition;
-	Vector2 enemyPosition;
 	float m_speed;
 	float m_moveTimer;
 	float m_moveInterval;
 	float m_moveDistance;
 	float m_moveRange;
-	float attack_range;
 	float m_MagicTimer;
 
 	Magic* m_pMagic;

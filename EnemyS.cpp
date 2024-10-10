@@ -24,7 +24,6 @@ m_moveInterval(2.0f),
 m_speed(35.0f),
 m_moveDistance(50.0f),
 m_moveRange(80.0f),
-attack_range(0.0f),
 m_pMagic(nullptr),
 m_MagicTimer(2.0f)
 {
@@ -55,12 +54,9 @@ bool EnemyS::Initialise(Renderer& renderer)
 	//enemy spawning position:
 	int m_x = ((rand() % 2 == 0) ? (rand() % 890 + 10) : (rand() % 890 + 910));
 	int m_y = ((rand() % 2 == 0) ? (rand() % 490 + 10) : (rand() % 480 + 550));
-	enemyPosition = Vector2(m_x, m_y);
-	m_targetPosition = enemyPosition;
+	m_position = Vector2(m_x, m_y);
+	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
-
-	m_pMagic = new Magic();
-	m_pMagic->Initialise(renderer);
 
 	return true;
 }
@@ -69,38 +65,63 @@ void EnemyS::Process(float deltaTime)
 {
 	if (IsAlive())
 	{
-		m_moveTimer += deltaTime;
-
-		if (IsWithinRange(enemyPosition))
+		//enemy attack:
+		if (m_pMagic)
 		{
-			Shoot(deltaTime);
-			//heading to the player:
-
+			m_pMagic->Process(deltaTime);
+			if (!m_pMagic->IsAnimating())
+			{
+				delete m_pMagic;
+				m_pMagic = nullptr;
+				m_MagicTimer = 2.0f; //reset the timer
+			}
 		}
+		else
+		{
+			m_MagicTimer -= deltaTime;
+			if (IsWithinRange(m_position))
+			{
+				Shoot(deltaTime);
+			}
+		}
+
+
+		//enemy movement:
+		m_moveTimer += deltaTime;
 
 		if (m_moveTimer >= m_moveInterval)
 		{
-			m_moveTimer = 0.0f;
-
-			float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
-
-			Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
-
-			Vector2 potentialPosition = enemyPosition + displacement;
-
-			if ((potentialPosition - enemyPosition).Length() <= m_moveRange)
+			if (IsWithinRange(m_position))
 			{
-				m_targetPosition = potentialPosition;
+				//heading towards the player if within range:
+				Vector2 directionToPlayer = m_pPlayer->GetPosition() - m_position;
+				directionToPlayer.Normalise();
+				m_position += directionToPlayer * m_speed * deltaTime;
 			}
 			else
 			{
-				displacement.Normalise();
-				displacement *= m_moveRange;
-				m_targetPosition = enemyPosition + displacement;
+				m_moveTimer = 0.0f;
+
+				float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
+
+				Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
+
+				Vector2 potentialPosition = m_position + displacement;
+
+				if ((potentialPosition - m_position).Length() <= m_moveRange)
+				{
+					m_targetPosition = potentialPosition;
+				}
+				else
+				{
+					displacement.Normalise();
+					displacement *= m_moveRange;
+					m_targetPosition = m_position + displacement;
+				}
 			}
 		}
 
-		Vector2 direction = m_targetPosition - enemyPosition;
+		Vector2 direction = m_targetPosition - m_position;
 		float distanceToTarget = direction.Length();
 
 		if (distanceToTarget > 0.1f)
@@ -111,16 +132,16 @@ void EnemyS::Process(float deltaTime)
 
 			if (movement.Length() > distanceToTarget)
 			{
-				enemyPosition = m_targetPosition;
+				m_position = m_targetPosition;
 			}
 			else
 			{
-				enemyPosition += movement;
+				m_position += movement;
 			}
 		}
 
-		m_pSprite->SetX(static_cast<int>(enemyPosition.x));
-		m_pSprite->SetY(static_cast<int>(enemyPosition.y));
+		m_pSprite->SetX(static_cast<int>(m_position.x));
+		m_pSprite->SetY(static_cast<int>(m_position.y));
 
 	}
 }
@@ -135,15 +156,15 @@ void EnemyS::Draw(Renderer& renderer)
 	Entity::Draw(renderer);
 }
 
-bool EnemyS::IsNearBoundary(Vector2 enemyPosition)
+bool EnemyS::IsNearBoundary(Vector2 m_position)
 {
 	float margin = 35.0f;	//the distance to trigger the function
 
-	return (enemyPosition.x <= margin || enemyPosition.x >= 1860.0f - margin ||
-		enemyPosition.y <= margin || enemyPosition.y >= 1060.0f - margin);
+	return (m_position.x <= margin || m_position.x >= 1860.0f - margin ||
+		m_position.y <= margin || m_position.y >= 1060.0f - margin);
 }
 
-bool EnemyS::IsWithinRange(Vector2 enemyPosition)
+bool EnemyS::IsWithinRange(Vector2 m_position)
 {
 	if (m_pPlayer == nullptr)
 	{
@@ -152,8 +173,8 @@ bool EnemyS::IsWithinRange(Vector2 enemyPosition)
 	Vector2 PlayerPosition = m_pPlayer->GetPosition();
 	float attackRange = 30.0f;			// the range of attack detection
 
-	float deltaX = enemyPosition.x - PlayerPosition.x;
-	float deltaY = enemyPosition.y - PlayerPosition.y;
+	float deltaX = m_position.x - PlayerPosition.x;
+	float deltaY = m_position.y - PlayerPosition.y;
 	float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
 
 	if (distance <= attackRange)
@@ -166,31 +187,17 @@ bool EnemyS::IsWithinRange(Vector2 enemyPosition)
 
 void EnemyS::Shoot(float deltaTime)
 {
-	if (m_pMagic)
+	if (m_MagicTimer <= 0.0f)
 	{
-		m_pMagic->Process(deltaTime);
-		if (!m_pMagic->IsAnimating())
-		{
-			delete m_pMagic;
-			m_pMagic = nullptr;
-			m_MagicTimer = 2.0f; //reset the timer
-		}
-	}
-	else
-	{
-		m_MagicTimer -= deltaTime;
+		m_pMagic = new Magic();
+		m_pMagic->Initialise(*m_pRenderer);
 
-		if (m_MagicTimer <= 0.0f)
-		{
-			m_pMagic = new Magic();
-			m_pMagic->Initialise(*m_pRenderer);
+		Vector2 direction = m_pPlayer->GetPosition() - m_position;
+		direction.Normalise();
+		float angle = atan2f(direction.y, direction.x) * (180.0f / static_cast<float>(M_PI));
 
-			Vector2 direction = m_pPlayer->GetPosition() - enemyPosition;
-			direction.Normalise();
-			float angle = atan2f(direction.y, direction.x) * (180.0f / static_cast<float>(M_PI));
+		m_pMagic->SetPosition(m_position, angle);
 
-			m_pMagic->SetPosition(enemyPosition, angle);
-
-		}
+		m_MagicTimer = 2.0f;
 	}
 }

@@ -46,13 +46,14 @@ bool Magic::Initialise(Renderer& renderer)
 		newMagic->SetFrameDuration(0.1f);
 		newMagic->SetLooping(false);
 		newMagic->Animate();
+
+		return true;
 	}
 	else
 	{
 		LogManager::GetInstance().Log("Magic failed to create!");
+		return false;
 	}
-
-	return true;
 }
 
 void Magic::SetPosition(const Vector2& position, float angle)
