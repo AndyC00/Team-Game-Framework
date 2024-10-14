@@ -50,6 +50,7 @@ Sprite::Draw(Renderer& renderer)
 	m_pTexture->SetActive();
 	renderer.DrawSprite(*this);
 }
+
 void Sprite::SetX(int x)
 {
 	m_x = x;

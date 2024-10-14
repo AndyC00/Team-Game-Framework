@@ -3,11 +3,13 @@
 
 #include "Magic.h"
 #include "Entity.h"
+#include "Player.h"
+
 
 class EnemyS : public Entity
 {
 public:
-	EnemyS();
+	EnemyS(Player* player);
 	~EnemyS();
 
 	//member methods:
@@ -17,8 +19,8 @@ public:
 	void Draw(Renderer& renderer);
 
 protected:
-	void Shoot(float deltaTime);
-	bool IsWithinRange(Vector2 m_position, Vector2 Player_position);
+	void CreateMagic();
+	bool IsWithinRange();
 
 private:
 	bool IsNearBoundary(Vector2 m_position);
@@ -36,10 +38,12 @@ private:
 	float m_moveInterval;
 	float m_moveDistance;
 	float m_moveRange;
-	float attack_range;
 	float m_MagicTimer;
+	float m_attackRange;
 
 	Magic* m_pMagic;
+	Player* m_pPlayer;
+	Renderer* m_pRenderer;
 };
 
 #endif // _ENEMYS_H_

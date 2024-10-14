@@ -57,7 +57,6 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
 {
     // Initialize the movement vector
     Vector2 movement(0.0f, 0.0f);
-
     // When melee attack the player stand still
     if (!(m_currentWeapon == 1 && m_attackCooldownRemaining > 0.0f))
     {
@@ -190,7 +189,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
 void Player::Attack(Renderer& renderer)
 {
     // Melee attack
-    if (m_currentWeapon == 1)  
+    if (m_currentWeapon == 1)
     {
         std::cout << "Melee attack in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
@@ -205,7 +204,7 @@ void Player::Attack(Renderer& renderer)
         }
     }
     // Projectile attack
-    else if (m_currentWeapon == 2)  
+    else if (m_currentWeapon == 2)
     {
         std::cout << "Shooting projectile in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
@@ -224,7 +223,7 @@ void Player::Attack(Renderer& renderer)
 void Player::Draw(Renderer& renderer)
 {
     // Draw the player
-    Entity::Draw(renderer);  
+    Entity::Draw(renderer);
 
     // Draw all projectiles
     for (auto projectile : m_projectiles)

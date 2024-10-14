@@ -15,11 +15,10 @@ public:
     bool Initialise(Renderer& renderer);
     void Process(float deltaTime);
     void Draw(Renderer& renderer);
-    bool IsAlive() const;
     void SetPosition(const Vector2& position, float angle);
-    Vector2& GetPosition();
+    const Vector2& GetPosition() const;
     float GetRadius();
-    void UpdateExplosions(float deltaTime);
+    bool IsAnimating() const;
 
 protected:
     Renderer* m_pRenderer;
@@ -27,11 +26,8 @@ protected:
 private:
     Vector2 m_position;
     Vector2 m_velocity;
-    bool m_isAlive;
-    float m_lifetime;
     float m_angle;
     AnimatedSprite* newMagic;
-
 };
 
 #endif MAGIC_H

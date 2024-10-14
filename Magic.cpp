@@ -4,13 +4,16 @@
 #include "animatedsprite.h"
 
 //library includes:
-#include "renderer.h" 
+#include "renderer.h"
+#include "vector2.h"
+#include "logmanager.h"
+
 #include <cmath>
+#include <iostream>
+
 
 Magic::Magic()
-	: m_isAlive(true)
-	, m_lifetime(2.0f)  // lifetime setting
-	, m_angle(0.0f)
+	: m_angle(0.0f)
 	, m_pRenderer(nullptr)
 	, newMagic(nullptr)
 {
@@ -30,13 +33,28 @@ bool Magic::Initialise(Renderer& renderer)
 {
 	m_pRenderer = &renderer;
 
-	newMagic = m_pRenderer->CreateAnimatedSprite("Sprites\\fireExplosion.png");
-	newMagic->SetupFrames(128, 128);
-	newMagic->SetFrameDuration(0.1f);
-	newMagic->SetLooping(false);
-	newMagic->Animate();
+	if (newMagic)
+	{
+		delete newMagic;
+		newMagic = nullptr;
+	}
 
-	return (newMagic != nullptr);
+	newMagic = m_pRenderer->CreateAnimatedSprite("Sprites\\fireExplosion.png");
+
+	if (newMagic)
+	{
+		newMagic->SetupFrames(128, 128);
+		newMagic->SetFrameDuration(0.1f);
+		newMagic->SetLooping(false);
+		newMagic->Animate();
+
+		return true;
+	}
+	else
+	{
+		LogManager::GetInstance().Log("Magic failed to create!");
+		return false;
+	}
 }
 
 void Magic::SetPosition(const Vector2& position, float angle)
@@ -44,34 +62,34 @@ void Magic::SetPosition(const Vector2& position, float angle)
 	m_position = position;
 	m_angle = angle;
 
-	const float SPEED = 800;
-	float angleInRadians = -m_angle * 3.14159f / 180.0f;
-	m_velocity.x = sin(angleInRadians) * SPEED;
-	m_velocity.y = cos(angleInRadians) * SPEED;
+	const float SPEED = 300;
+	float angleInRadians = m_angle * M_PI / 180.0f;
+	m_velocity.x = cos(angleInRadians) * SPEED;
+	m_velocity.y = sin(angleInRadians) * SPEED;
+
+	//std::cout << "Magic SetPosition called:" << std::endl;
+	//std::cout << "Position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
+	//std::cout << "Angle: " << m_angle << " degrees (" << angleInRadians << " radians)" << std::endl;
+	//std::cout << "Velocity: (" << m_velocity.x << ", " << m_velocity.y << ")" << std::endl;
 }
 
 void Magic::Process(float deltaTime)
 {
-
 	m_position += m_velocity * deltaTime;
 
 	newMagic->SetX(m_position.x);
 	newMagic->SetY(m_position.y);
 
-	UpdateExplosions(deltaTime);
+	newMagic->Process(deltaTime);
 }
 
 void Magic::Draw(Renderer& renderer)
 {
+	//std::cout << "Magic::Draw called at position (" << m_position.x << ", " << m_position.y << ")." << std::endl;
 	newMagic->Draw(renderer);
 }
 
-bool Magic::IsAlive() const
-{
-	return m_isAlive;
-}
-
-Vector2& Magic::GetPosition()
+const Vector2& Magic::GetPosition() const
 {
 	return m_position;
 }
@@ -81,13 +99,11 @@ float Magic::GetRadius()
 	return newMagic->GetWidth() / 2;
 }
 
-void Magic::UpdateExplosions(float deltaTime)
+bool Magic::IsAnimating() const
 {
-
-	newMagic->Process(deltaTime);
-
-	if (!newMagic->IsAnimating())
+	if (newMagic)
 	{
-		newMagic->Restart();
+		return newMagic->IsAnimating();
 	}
+	return false;
 }

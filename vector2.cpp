@@ -45,9 +45,16 @@ float Vector2::Length() const
 void Vector2::Normalise()
 {
 	float length = Length();
-
-	x = x / length; 
-	y = y / length;
+	if (length > 0.0f)
+	{
+		x /= length;
+		y /= length;
+	}
+	else
+	{
+		x = 0.0f;
+		y = 0.0f;
+	}
 }
 
 float
