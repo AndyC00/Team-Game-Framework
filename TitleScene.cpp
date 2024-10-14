@@ -25,7 +25,7 @@ TitleScene::~TitleScene()
 
 bool TitleScene::Initialise(Renderer& renderer)
 {
-	m_pCentre = renderer.CreateSprite("Sprites\\board8x8.png");
+	m_pCentre = renderer.CreateSprite("Sprites\\scenes\\FirstScene.png");
 
 	const int BOARD_HALF_WIDTH = m_pCentre->GetWidth() / 2;
 	const int BOARD_HALF_HEIGHT = m_pCentre->GetHeight() / 2;

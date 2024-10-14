@@ -94,7 +94,10 @@
     <ClCompile Include="MeleeHitbox.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy2.cpp">
+    <ClCompile Include="EnemySlime.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionScene.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -196,6 +199,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="MeleeHitbox.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySlime.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionScene.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

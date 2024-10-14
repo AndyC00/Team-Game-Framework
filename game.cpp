@@ -7,8 +7,10 @@
 #include "animatedsprite.h"
 #include "soundsystem.h"
 
+//Scenes:
 #include "TitleScene.h"
 #include "dungeon1.h"
+#include "InstructionScene.h"
 
 // Library includes: 
 #include "renderer.h" 
@@ -106,10 +108,15 @@ bool Game::Initialise()
 	m_scenes.push_back(pScene);
 	m_iCurrentScene = 0;
 
+	Scene* pScene1 = 0;
+	pScene1 = new InstructionScene();
+	pScene1->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene1);
+
 	Scene* pScene2 = 0;
-	pScene = new Dungeon1Scene();
-	pScene->Initialise(*m_pRenderer);
-	m_scenes.push_back(pScene);
+	pScene2 = new Dungeon1Scene();
+	pScene2->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene2);
 
 	// text renderer at last:
 	// Load static text textures into the Texture Manager... 
