@@ -8,6 +8,7 @@
 #include <vector>  // To store multiple projectiles
 #include "sprite.h"
 #include "MeleeHitbox.h"
+#include "fmod.hpp"
 
 class Sprite;
 
@@ -33,7 +34,11 @@ private:
     float m_attackCooldownRemaining;
     float m_attackCooldown;
     std::vector<Projectile*> m_projectiles;  // Store projectiles
-    std::vector<MeleeHitbox*> m_meleeHitboxes;  // Store melee hitboxes
+    std::vector<MeleeHitbox*> m_melee;  // Store melee hitboxes
+
+    FMOD::System* m_pFmodSystem;
+    FMOD::Sound* m_pShootSound;
+    FMOD::Sound* m_pMeleeSound;
 public:
 
 protected:

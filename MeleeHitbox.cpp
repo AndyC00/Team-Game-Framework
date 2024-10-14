@@ -15,11 +15,22 @@ MeleeHitbox::~MeleeHitbox()
 
 bool MeleeHitbox::Initialise(Renderer& renderer, const Vector2& position, const Vector2& direction)
 {
-    m_position = position + direction * 15.0f;  // Offset the hitbox a little from the player position
+    m_position = position + direction * 15.0f;
     m_velocity = direction * 100.0f;  // Move in the direction the player is facing
     m_pSprite = renderer.CreateSprite("Sprites\\slash.png");
-    m_pSprite->SetScale(0.2f);  // Scale the hitbox sprite
-    
+    if (direction.x == 1 && direction.y == 0)
+    {
+        m_pSprite->SetScale(-0.2f);
+        m_pSprite->SetAngle(90.0f);
+    }
+    else if (direction.x == 0 && direction.y == -1)
+    {
+        m_pSprite->SetScale(-0.2f);
+    }
+    else
+    {
+        m_pSprite->SetScale(0.2f);  // Scale the hitbox sprite
+    }
     return true;
 }
 
@@ -32,7 +43,7 @@ void MeleeHitbox::Process(float deltaTime)
         m_bAlive = false;  // Mark hitbox as dead when its lifespan ends
     }
 
-    Entity::Process(deltaTime);  // Update position, if needed
+    Entity::Process(deltaTime);  // Update position
 }
 
 void MeleeHitbox::Draw(Renderer& renderer)
