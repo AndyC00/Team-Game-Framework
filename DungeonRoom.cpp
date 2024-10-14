@@ -1,22 +1,13 @@
 #include "DungeonRoom.h"
 #include <iostream>
+#include <fstream>
+#include "json.hpp" // Include the JSON library
 
-const int TILE_SIZE = 64; // Updated tile size
+using json = nlohmann::json;
+
+const int TILE_SIZE = 64;
 const int TILE_FLOOR = 0;
 const int TILE_WALL = 1;
-
-int tilemap[10][10] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
 
 DungeonRoom::DungeonRoom()
 {
@@ -36,6 +27,57 @@ void DungeonRoom::LoadTiles()
     Texture* wallTexture = new Texture();
     wallTexture->Initialise("Sprites\\wall.png"); // Path to your wall texture
     m_wallSprite.Initialise(*wallTexture);
+
+    // Load the tilemap from a JSON file
+    LoadTilemapFromJSON("Rooms\\Room1.json");
+}
+
+void DungeonRoom::LoadTilemapFromJSON(const std::string& filename)
+{
+    std::ifstream file(filename);
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open " << filename << std::endl;
+        return;
+    }
+
+    json roomData;
+    file >> roomData;
+
+    if (roomData.contains("tilemap"))
+    {
+        for (int y = 0; y < 10; ++y)
+        {
+            for (int x = 0; x < 10; ++x)
+            {
+                tilemap[y][x] = roomData["tilemap"][y][x];
+            }
+        }
+    }
+    else
+    {
+        std::cerr << "No tilemap found in JSON file!" << std::endl;
+    }
+}
+
+bool DungeonRoom::IsTilePassable(int x, int y)
+{
+    if (x < 0 || x >= 10 || y < 0 || y >= 10)
+    {
+        return false; // Out of bounds, treat as non-passable.
+    }
+
+    // Check if the tile is a wall or not. Only walls are non-passable.
+    return (tilemap[y][x] != TILE_WALL);
+}
+
+bool DungeonRoom::IsCollisionAt(float x, float y)
+{
+    int tileX = static_cast<int>(x / TILE_SIZE);
+    int tileY = static_cast<int>(y / TILE_SIZE);
+
+    // Return true if the tile is a wall (i.e., a collision occurs).
+    return !IsTilePassable(tileX, tileY);
 }
 
 void DungeonRoom::Draw(Renderer& renderer)
