@@ -14,10 +14,10 @@ public:
     void LoadTiles();
     void LoadTilemapFromJSON(const std::string& filename);
     void Draw(Renderer& renderer);
-    void OnTileClicked(int mouseX, int mouseY); // New method for handling tile clicks
+    void OnTileClicked(int mouseX, int mouseY) ;
 
-    bool IsTilePassable(int x, int y);
-    bool IsCollisionAt(float x, float y);
+    bool IsTilePassable(int x, int y) ;
+    bool IsCollisionAt(float x, float y) ;
 
 private:
     Sprite m_floorSprite;

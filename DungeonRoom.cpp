@@ -9,6 +9,9 @@ const int TILE_SIZE = 64;
 const int TILE_FLOOR = 0;
 const int TILE_WALL = 1;
 
+// Set the tilemap size as a constant
+const int TILEMAP_SIZE = 10; // You can change this to any value
+
 DungeonRoom::DungeonRoom()
 {
 }
@@ -46,9 +49,9 @@ void DungeonRoom::LoadTilemapFromJSON(const std::string& filename)
 
     if (roomData.contains("tilemap"))
     {
-        for (int y = 0; y < 10; ++y)
+        for (int y = 0; y < TILEMAP_SIZE; ++y)
         {
-            for (int x = 0; x < 10; ++x)
+            for (int x = 0; x < TILEMAP_SIZE; ++x)
             {
                 tilemap[y][x] = roomData["tilemap"][y][x];
             }
@@ -62,7 +65,7 @@ void DungeonRoom::LoadTilemapFromJSON(const std::string& filename)
 
 bool DungeonRoom::IsTilePassable(int x, int y)
 {
-    if (x < 0 || x >= 10 || y < 0 || y >= 10)
+    if (x < 0 || x >= TILEMAP_SIZE || y < 0 || y >= TILEMAP_SIZE)
     {
         return false; // Out of bounds, treat as non-passable.
     }
@@ -99,9 +102,9 @@ void DungeonRoom::OnTileClicked(int mouseX, int mouseY)
 
 void DungeonRoom::Draw(Renderer& renderer)
 {
-    for (int y = 0; y < 10; ++y)
+    for (int y = 0; y < TILEMAP_SIZE; ++y)
     {
-        for (int x = 0; x < 10; ++x)
+        for (int x = 0; x < TILEMAP_SIZE; ++x)
         {
             int tileType = tilemap[y][x];
 
