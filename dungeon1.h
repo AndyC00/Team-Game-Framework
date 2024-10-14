@@ -32,6 +32,7 @@ protected:
 private:
     Dungeon1Scene(const Dungeon1Scene& Dungeon1Scene);
     Dungeon1Scene& operator = (const Dungeon1Scene& Dungeon1Scene);
+    void CheckCollisions();
 
     // Member data:
 public:

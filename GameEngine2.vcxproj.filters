@@ -94,6 +94,9 @@
     <ClCompile Include="MeleeHitbox.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy2.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">

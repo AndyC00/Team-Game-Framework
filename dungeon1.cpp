@@ -124,3 +124,21 @@ void Dungeon1Scene::DebugDraw()
 	m_pCentre->SetBlueTint(tint[2]);
 	m_pCentre->SetAlpha(tint[3]);
 }
+
+void Dungeon1Scene::CheckCollisions()
+{
+	//if (m_pPlayer && m_pPlayer->IsAlive())
+	//{
+	//	for (auto& enemy : m_pEnemies)
+	//	{
+	//		if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
+	//		{
+	//			m_pPlayer->SetDead();
+
+	//			Game::pSoundsystem->playSound(soundname, nullptr, false, &channel);
+
+	//			CreateExplosion(enemy->GetPosition().x, enemy->GetPosition().y);
+	//		}
+	//	}
+	//}
+}
