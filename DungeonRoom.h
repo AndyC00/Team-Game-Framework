@@ -14,9 +14,10 @@ public:
     void LoadTiles();
     void LoadTilemapFromJSON(const std::string& filename);
     void Draw(Renderer& renderer);
+    void OnTileClicked(int mouseX, int mouseY); // New method for handling tile clicks
 
-    bool IsTilePassable(int x, int y); // Checks if a tile is passable based on tile type
-    bool IsCollisionAt(float x, float y); // Checks for collision at world coordinates
+    bool IsTilePassable(int x, int y);
+    bool IsCollisionAt(float x, float y);
 
 private:
     Sprite m_floorSprite;

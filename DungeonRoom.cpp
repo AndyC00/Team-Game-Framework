@@ -80,6 +80,23 @@ bool DungeonRoom::IsCollisionAt(float x, float y)
     return !IsTilePassable(tileX, tileY);
 }
 
+void DungeonRoom::OnTileClicked(int mouseX, int mouseY)
+{
+    // Convert mouse coordinates to tile coordinates
+    int tileX = mouseX / TILE_SIZE;
+    int tileY = mouseY / TILE_SIZE;
+
+    // Check if the tile is passable
+    if (IsTilePassable(tileX, tileY))
+    {
+        std::cout << "Tile at (" << tileX << ", " << tileY << ") is passable." << std::endl;
+    }
+    else
+    {
+        std::cout << "Tile at (" << tileX << ", " << tileY << ") is not passable." << std::endl;
+    }
+}
+
 void DungeonRoom::Draw(Renderer& renderer)
 {
     for (int y = 0; y < 10; ++y)
