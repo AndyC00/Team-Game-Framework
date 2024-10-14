@@ -34,7 +34,7 @@ Player::~Player()
         delete projectile;  // Clean up projectiles when player is destroyed
     }
 
-    for (auto melee : m_meleeHitboxes)
+    for (auto melee : m_melee)
     {
         delete melee;
     }
@@ -166,7 +166,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     }
 
     // Update all melee hitboxes
-    for (auto it = m_meleeHitboxes.begin(); it != m_meleeHitboxes.end();)
+    for (auto it = m_melee.begin(); it != m_melee.end();)
     {
         (*it)->Process(deltaTime);
 
@@ -175,7 +175,7 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
         {
             delete* it;
             // Erase the hitbox
-            it = m_meleeHitboxes.erase(it);
+            it = m_melee.erase(it);
         }
         else
         {
@@ -199,7 +199,7 @@ void Player::Attack(Renderer& renderer)
         if (newMeleeHitbox->Initialise(renderer, m_position, m_facingDirection))
         {
             
-            m_meleeHitboxes.push_back(newMeleeHitbox);
+            m_melee.push_back(newMeleeHitbox);
             m_pFmodSystem->playSound(m_pMeleeSound, 0, false, nullptr);
             m_pFmodSystem->update();
         }
@@ -233,7 +233,7 @@ void Player::Draw(Renderer& renderer)
     }
 
     // Draw all melee hitboxes
-    for (auto meleeHitbox : m_meleeHitboxes)
+    for (auto meleeHitbox : m_melee)
     {
         meleeHitbox->Draw(renderer);
     }
