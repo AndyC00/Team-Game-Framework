@@ -35,7 +35,10 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
         m_dungeonRoom.OnTileClicked(static_cast<int>(mousePosition.x), static_cast<int>(mousePosition.y));
 
     }
-
+    if (inputSystem.GetMouseButtonState(SDL_BUTTON_LEFT) == BS_PRESSED)
+    {
+        NewRoom();
+    }
     // Other game logic can go here
 }
 
