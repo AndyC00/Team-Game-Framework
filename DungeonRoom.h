@@ -14,14 +14,14 @@ public:
     void LoadTiles();
     void LoadTilemapFromJSON(const std::string& filename);
     void Draw(Renderer& renderer);
-    void OnTileClicked(int mouseX, int mouseY) ;
+    void OnTileClicked(int mouseX, int mouseY);
 
-    bool IsTilePassable(int x, int y) ;
-    bool IsCollisionAt(float x, float y) ;
+    bool IsTilePassable(int x, int y);
+    bool IsCollisionAt(float x, float y);
 
 private:
     Sprite m_floorSprite;
     Sprite m_wallSprite;
 
-    int tilemap[10][10]; // The tilemap will store both the tile type and collision information
+    std::vector<std::vector<int>> tilemap; // The tilemap will store both the tile type and collision information
 };

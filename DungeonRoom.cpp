@@ -5,12 +5,12 @@
 
 using json = nlohmann::json;
 
-const int TILE_SIZE = 64;
+const int TILE_SIZE = 32;
 const int TILE_FLOOR = 0;
 const int TILE_WALL = 1;
 
 // Set the tilemap size as a constant
-const int TILEMAP_SIZE = 10; // You can change this to any value
+const int TILEMAP_SIZE = 20; // You can change this to any value
 
 DungeonRoom::DungeonRoom()
 {
@@ -49,9 +49,15 @@ void DungeonRoom::LoadTilemapFromJSON(const std::string& filename)
 
     if (roomData.contains("tilemap"))
     {
-        for (int y = 0; y < TILEMAP_SIZE; ++y)
+        int rows = roomData["tilemap"].size();
+        int cols = roomData["tilemap"][0].size();
+
+        // Resize the tilemap to fit the data
+        tilemap.resize(rows);
+        for (int y = 0; y < rows; ++y)
         {
-            for (int x = 0; x < TILEMAP_SIZE; ++x)
+            tilemap[y].resize(cols);
+            for (int x = 0; x < cols; ++x)
             {
                 tilemap[y][x] = roomData["tilemap"][y][x];
             }
@@ -62,6 +68,7 @@ void DungeonRoom::LoadTilemapFromJSON(const std::string& filename)
         std::cerr << "No tilemap found in JSON file!" << std::endl;
     }
 }
+
 
 bool DungeonRoom::IsTilePassable(int x, int y)
 {
@@ -102,9 +109,12 @@ void DungeonRoom::OnTileClicked(int mouseX, int mouseY)
 
 void DungeonRoom::Draw(Renderer& renderer)
 {
-    for (int y = 0; y < TILEMAP_SIZE; ++y)
+    int rows = tilemap.size();
+    int cols = tilemap[0].size(); // Assumes at least one row
+
+    for (int y = 0; y < rows; ++y)
     {
-        for (int x = 0; x < TILEMAP_SIZE; ++x)
+        for (int x = 0; x < cols; ++x)
         {
             int tileType = tilemap[y][x];
 
@@ -112,14 +122,14 @@ void DungeonRoom::Draw(Renderer& renderer)
             {
                 m_floorSprite.SetX(x * TILE_SIZE);
                 m_floorSprite.SetY(y * TILE_SIZE);
-                m_floorSprite.SetScale(2.0f);
+                m_floorSprite.SetScale(1.0f);
                 m_floorSprite.Draw(renderer);
             }
             else if (tileType == TILE_WALL)
             {
                 m_wallSprite.SetX(x * TILE_SIZE);
                 m_wallSprite.SetY(y * TILE_SIZE);
-                m_wallSprite.SetScale(2.0f);
+                m_wallSprite.SetScale(1.0f);
                 m_wallSprite.Draw(renderer);
             }
             else
@@ -129,3 +139,4 @@ void DungeonRoom::Draw(Renderer& renderer)
         }
     }
 }
+
