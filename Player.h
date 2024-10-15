@@ -23,6 +23,8 @@ public:
     void Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer);
     void Attack(Renderer& renderer);
     void Draw(Renderer& renderer);
+    int GetLives() const;
+    int GetWeapons() const;
 protected:
 
 private:

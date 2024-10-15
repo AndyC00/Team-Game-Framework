@@ -26,6 +26,13 @@ public:
     virtual bool Initialise(Renderer& renderer);
     virtual void Process(float deltaTime, InputSystem& inputSystem);
     virtual void Draw(Renderer& renderer);
+    Sprite* m_pZapPow[4];
+    Sprite* UpdatePlayerHPTexture(int playerHP);
+    Sprite* m_pPlayerHPSprite;
+
+    Sprite* m_pPlayerWeaponSprite;
+    Sprite* UpdatePlayerWeaponTexture(int currentWeapon);
+
 
 protected:
 
