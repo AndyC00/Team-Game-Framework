@@ -20,7 +20,7 @@ DungeonRoom::~DungeonRoom()
 {
 }
 
-void DungeonRoom::LoadTiles()
+void DungeonRoom::LoadTiles(const std::string& filename)
 {
     // Load the textures for floor and wall tiles
     Texture* floorTexture = new Texture();
@@ -32,7 +32,7 @@ void DungeonRoom::LoadTiles()
     m_wallSprite.Initialise(*wallTexture);
 
     // Load the tilemap from a JSON file
-    LoadTilemapFromJSON("Rooms\\Room1.json");
+    LoadTilemapFromJSON(filename);
 }
 
 void DungeonRoom::LoadTilemapFromJSON(const std::string& filename)

@@ -11,7 +11,7 @@ public:
     DungeonRoom();
     ~DungeonRoom();
 
-    void LoadTiles();
+    void LoadTiles(const std::string& filename);
     void LoadTilemapFromJSON(const std::string& filename);
     void Draw(Renderer& renderer);
     void OnTileClicked(int mouseX, int mouseY);

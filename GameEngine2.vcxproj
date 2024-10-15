@@ -159,7 +159,6 @@
     <ClCompile Include="matrix4.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="scene.cpp" />
-    <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="soundsystem.cpp" />
@@ -193,7 +192,6 @@
     <ClInclude Include="matrix4.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="scene.h" />
-    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="soundsystem.h" />

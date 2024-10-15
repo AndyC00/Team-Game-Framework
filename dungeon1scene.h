@@ -12,6 +12,8 @@ public:
     virtual void Draw(Renderer& renderer) override;
     virtual void DebugDraw() override;
 
+    virtual void NewRoom();
+
 private:
     DungeonRoom m_dungeonRoom; // DungeonRoom instance
 };
