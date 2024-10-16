@@ -26,6 +26,7 @@ public:
     bool IsCollidingWith(Entity& toCheck);
     int GetLives() const;
     int GetWeapons() const;
+    void SetDead();
 protected:
 
 private:

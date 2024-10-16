@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "renderer.h"
 #include "Projectile.h"
+
 #include <iostream>
 
 const float PLAYER_MOVE_SPEED = 210.0f;
@@ -238,10 +239,10 @@ void Player::Draw(Renderer& renderer)
     }
 }
 
-bool Player::IsCollidingWith(Entity& toCheck)
-{
-    Entity::IsCollidingWith(toCheck);
-}
+//bool Player::IsCollidingWith(Entity& toCheck)
+//{
+//    Entity::IsCollidingWith(toCheck);
+//}
 
 int Player::GetLives() const
 {
@@ -251,4 +252,9 @@ int Player::GetLives() const
 int Player::GetWeapons() const
 {
     return m_currentWeapon;
+}
+
+void Player::SetDead()
+{
+    m_bAlive = false;
 }

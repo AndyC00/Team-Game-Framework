@@ -172,7 +172,7 @@ void EnemySlime::SetDead()
 	m_bAlive = false;
 }
 
-bool EnemySlime::IsCollidingWith(Entity& toCheck)
-{
-	Entity::IsCollidingWith(toCheck);
-}
+//bool EnemySlime::IsCollidingWith(Entity& toCheck)
+//{
+//	Entity::IsCollidingWith(toCheck);
+//}
