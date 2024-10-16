@@ -27,5 +27,6 @@ void Ladder::Process(float deltaTime)
 
 void Ladder::Draw(Renderer& renderer)
 {
+
     Entity::Draw(renderer);
 }
