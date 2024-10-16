@@ -13,7 +13,7 @@ public:
 
 	//member methods:
 public:
-	bool Initialise(Renderer& renderer, const char* pcFilename);
+	bool Initialise2(Renderer& renderer);
 	void Process(float deltaTime);
 	void Draw(Renderer& renderer);
 

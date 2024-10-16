@@ -4,8 +4,7 @@
 // Local includes:
 #include "renderer.h"
 #include "sprite.h"
-#include "EnemyS.h"
-#include "Player.h" // Include the Player class
+#include "Player.h"
 
 #include "imgui/imgui.h"
 #include "renderer.h"
@@ -20,6 +19,7 @@ Dungeon1Scene::Dungeon1Scene() :
 	m_angle(0.0f),
 	m_rotationSpeed(0.0f),
 	m_Enemy1(nullptr),
+	m_Enemy2(nullptr),
 	m_pPlayer(nullptr),
 	m_pRenderer(nullptr),
 	m_pPlayerHPSprite(nullptr),
@@ -36,7 +36,11 @@ Dungeon1Scene::~Dungeon1Scene()
 		delete m_Enemy1;
 	}
 	m_Enemies1.clear();
-
+	for (auto& m_Enemy2 : m_Enemies2)
+	{
+		delete m_Enemy2;
+	}
+	m_Enemies2.clear();
 	delete m_pPlayer; // Clean up the player
 
 	delete m_pZapPow[0];
@@ -73,11 +77,17 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 	m_pPlayer->GetPosition().y = SCREEN_HEIGHT / 2;
 
 	// Spawn a setting number of enemies:
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		EnemyS* m_Enemy1 = new EnemyS(m_pPlayer);
+		m_Enemy1 = new EnemyS(m_pPlayer);
 		m_Enemy1->Initialise(renderer);
 		m_Enemies1.push_back(m_Enemy1);
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		m_Enemy2 = new EnemySlime(m_pPlayer);
+		m_Enemy2->Initialise2(renderer);
+		m_Enemies2.push_back(m_Enemy2);
 	}
 
 	// Load static text textures into the Texture Manager... 
@@ -145,7 +155,6 @@ Sprite* Dungeon1Scene::UpdatePlayerWeaponTexture(int currentWeapon)
 
 void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 {
-	// Process the player input and movement
 	m_pPlayer->Process(deltaTime, inputSystem, *m_pRenderer);
 
 	m_pCentre->SetAngle(0);
@@ -155,12 +164,18 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 	{
 		m_Enemy1->Process(deltaTime);
 	}
+	for (auto& m_Enemy2 : m_Enemies2)
+	{
+		m_Enemy2->Process(deltaTime);
+	}
 }
 
 void Dungeon1Scene::Draw(Renderer& renderer)
 {
+	//draw the background
 	m_pCentre->Draw(renderer);
 
+	//draw the enemies
 	for (auto& m_Enemy1 : m_Enemies1)
 	{
 		if (m_Enemy1->IsAlive())
@@ -168,8 +183,15 @@ void Dungeon1Scene::Draw(Renderer& renderer)
 			m_Enemy1->Draw(renderer);
 		}
 	}
+	for (auto& m_Enemy2 : m_Enemies2)
+	{
+		if (m_Enemy2->IsAlive())
+		{
+			m_Enemy2->Draw(renderer);
+		}
+	}
 
-	// Draw the player
+	//draw the player
 	m_pPlayer->Draw(renderer);
 
 	m_pZapPow[0]->Draw(renderer); // Draw HP label

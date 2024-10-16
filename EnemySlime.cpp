@@ -33,13 +33,14 @@ EnemySlime::~EnemySlime()
 	
 }
 
-bool EnemySlime::Initialise(Renderer& renderer, const char* pcFilename)
+bool EnemySlime::Initialise2(Renderer& renderer)
 {
 	m_pRenderer = &renderer;
 
 	m_slime = m_pRenderer->CreateAnimatedSprite("Sprites\\slime.png");
 	m_slime->SetupFrames(47, 47);
-	m_slime->SetFrameDuration(0.1f);
+	m_slime->SetScale(1.65);
+	m_slime->SetFrameDuration(0.15f);
 	m_slime->SetLooping(true);
 	m_slime->Animate();
 
@@ -51,6 +52,9 @@ bool EnemySlime::Initialise(Renderer& renderer, const char* pcFilename)
 	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
 
+	m_slime->SetX(static_cast<int>(m_x));
+	m_slime->SetY(static_cast<int>(m_y));
+
 	return true;
 }
 
@@ -60,40 +64,41 @@ void EnemySlime::Process(float deltaTime)
 	{
 		m_slime->Process(deltaTime);
 
-		//enemy movement:
-		if (IsWithinRange())
+		if (IsNearBoundary(m_position))
 		{
-			//heading towards the player if within range:
-			m_targetPosition = m_pPlayer->GetPosition();
-			Vector2 directionToPlayer = m_targetPosition - m_position;
-
-			float length = directionToPlayer.Length();
-			//std::cout << "Direction Length: " << length << std::endl;
-
-			directionToPlayer.Normalise();
-			m_position += directionToPlayer * m_speed * deltaTime;
+			const float screenWidth = 1860.0f;
+			const float screenHeight = 1050.0f;
+			m_targetPosition = Vector2(screenWidth / 2.0f, screenHeight / 2.0f);
 		}
 		else
 		{
-			m_moveTimer += deltaTime;
-
-			if (m_moveTimer >= m_moveInterval)
+			//enemy movement:
+			if (IsWithinRange())
 			{
-				m_moveTimer = 0.0f;
+				m_targetPosition = m_pPlayer->GetPosition();
+			}
+			else
+			{
+				m_moveTimer += deltaTime;
 
-				float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
-				Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
-				Vector2 potentialPosition = m_position + displacement;
+				if (m_moveTimer >= m_moveInterval)
+				{
+					m_moveTimer = 0.0f;
 
-				if ((potentialPosition - m_position).Length() <= m_moveRange)
-				{
-					m_targetPosition = potentialPosition;
-				}
-				else
-				{
-					displacement.Normalise();
-					displacement *= m_moveRange;
-					m_targetPosition = m_position + displacement;
+					float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
+					Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
+					Vector2 potentialPosition = m_position + displacement;
+
+					if ((potentialPosition - m_position).Length() <= m_moveRange)
+					{
+						m_targetPosition = potentialPosition;
+					}
+					else
+					{
+						displacement.Normalise();
+						displacement *= m_moveRange;
+						m_targetPosition = m_position + displacement;
+					}
 				}
 			}
 		}
@@ -117,8 +122,8 @@ void EnemySlime::Process(float deltaTime)
 			}
 		}
 
-		m_pSprite->SetX(static_cast<int>(m_position.x));
-		m_pSprite->SetY(static_cast<int>(m_position.y));
+		m_slime->SetX(static_cast<int>(m_position.x));
+		m_slime->SetY(static_cast<int>(m_position.y));
 		//std::cout << "Enemy Position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
 	}
 	else
@@ -130,15 +135,15 @@ void EnemySlime::Process(float deltaTime)
 
 void EnemySlime::Draw(Renderer& renderer)
 {
-	Entity::Draw(renderer);
+	m_slime->Draw(renderer);
 }
 
 bool EnemySlime::IsNearBoundary(Vector2 m_position)
 {
-	float margin = 35.0f;	//the distance to trigger the function
+	float margin = 100.0f;	//the distance to trigger the function
 
 	return (m_position.x <= margin || m_position.x >= 1860.0f - margin ||
-		m_position.y <= margin || m_position.y >= 1060.0f - margin);
+		m_position.y <= margin || m_position.y >= 1050.0f - margin);
 }
 
 bool EnemySlime::IsWithinRange()
