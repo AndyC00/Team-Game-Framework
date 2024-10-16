@@ -1,6 +1,7 @@
 #pragma once
 #include "scene.h"
 #include "dungeonroom.h"
+#include "ladder.h"
 
 class Dungeon1Scene : public Scene {
 public:
@@ -13,7 +14,9 @@ public:
     virtual void DebugDraw() override;
 
     virtual void NewRoom();
+    virtual void SpawnLadder();
 
 private:
     DungeonRoom m_dungeonRoom; // DungeonRoom instance
+    Ladder m_ladder; // Ladder instance
 };

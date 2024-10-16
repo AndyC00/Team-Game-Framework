@@ -23,6 +23,7 @@ public:
 	void Rotate(float direction);
 	bool IsAlive() const;
 	void SetDead();
+	void SetAlive();
 
 	float GetRadius();
 	float GetAngle() const;

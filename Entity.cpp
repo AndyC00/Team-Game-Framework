@@ -76,6 +76,11 @@ void Entity::SetDead()
     m_bAlive = false;
 }
 
+void Entity::SetAlive()
+{
+    m_bAlive = true;
+}
+
 // Get the radius of the entity (based on the sprite's size)
 float Entity::GetRadius()
 {

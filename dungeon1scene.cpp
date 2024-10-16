@@ -19,6 +19,8 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 {
     // Initialize the dungeon room
     m_dungeonRoom.LoadTiles("Rooms\\Room1.json"); // Use LoadTiles instead of CreateFromJSON
+    m_ladder.Initialise(renderer); // Initialise the ladder
+    m_ladder.SetDead();
 
     return true;
 }
@@ -39,6 +41,11 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
     {
         NewRoom();
     }
+    if (inputSystem.GetKeyState(SDL_SCANCODE_SPACE) == BS_PRESSED)
+    {
+        SpawnLadder();
+    }
+
     // Other game logic can go here
 }
 
@@ -46,6 +53,7 @@ void Dungeon1Scene::Draw(Renderer& renderer)
 {
     // Draw the dungeon room
     m_dungeonRoom.Draw(renderer);
+    m_ladder.Draw(renderer);
 }
 
 void Dungeon1Scene::DebugDraw()
@@ -71,4 +79,9 @@ void Dungeon1Scene::NewRoom()
 
     // Load a random room
     m_dungeonRoom.LoadTiles(roomFiles[randomIndex]);
+}
+
+void Dungeon1Scene::SpawnLadder()
+{
+    m_ladder.SetAlive(); // Set the ladder to be alive
 }
