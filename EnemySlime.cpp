@@ -161,3 +161,18 @@ bool EnemySlime::IsWithinRange()
 
 	return distance <= m_attackRange;
 }
+
+bool EnemySlime::IsAlive() const
+{
+	return m_bAlive;
+}
+
+void EnemySlime::SetDead()
+{
+	m_bAlive = false;
+}
+
+bool EnemySlime::IsCollidingWith(Entity& toCheck)
+{
+	Entity::IsCollidingWith(toCheck);
+}

@@ -237,3 +237,8 @@ void Player::Draw(Renderer& renderer)
         meleeHitbox->Draw(renderer);
     }
 }
+
+bool Player::IsCollidingWith(Entity& toCheck)
+{
+    Entity::IsCollidingWith(toCheck);
+}

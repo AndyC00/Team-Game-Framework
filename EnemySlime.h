@@ -16,15 +16,20 @@ public:
 	bool Initialise2(Renderer& renderer);
 	void Process(float deltaTime);
 	void Draw(Renderer& renderer);
+	bool IsNearBoundary(Vector2 m_position);
+	bool IsAlive() const;
+	void SetDead();
+	bool IsCollidingWith(Entity& toCheck);
 
 protected:
 	bool IsWithinRange();
 
 private:
-	bool IsNearBoundary(Vector2 m_position);
+
 
 	//member data:
 public:
+	bool m_bAlive;
 
 protected:
 

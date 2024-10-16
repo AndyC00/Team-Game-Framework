@@ -23,6 +23,8 @@ public:
     void Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer);
     void Attack(Renderer& renderer);
     void Draw(Renderer& renderer);
+    bool IsCollidingWith(Entity& toCheck);
+
 protected:
 
 private:
@@ -39,6 +41,7 @@ private:
     FMOD::System* m_pFmodSystem;
     FMOD::Sound* m_pShootSound;
     FMOD::Sound* m_pMeleeSound;
+
 public:
 
 protected:
