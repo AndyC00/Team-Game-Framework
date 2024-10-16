@@ -44,11 +44,13 @@ protected:
     float m_rotationSpeed;
 
     std::vector<EnemyS*> m_Enemies1;
+    std::vector<EnemySlime*> m_Enemies2;
     Player* m_pPlayer; 
     Renderer* m_pRenderer;
 
 private:
     EnemyS* m_Enemy1;
+    EnemySlime* m_Enemy2;
 };
 
 #endif // _DUNGEON1_H_
