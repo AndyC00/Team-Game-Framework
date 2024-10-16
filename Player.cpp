@@ -242,3 +242,13 @@ bool Player::IsCollidingWith(Entity& toCheck)
 {
     Entity::IsCollidingWith(toCheck);
 }
+
+int Player::GetLives() const
+{
+    return m_lives;
+}
+
+int Player::GetWeapons() const
+{
+    return m_currentWeapon;
+}

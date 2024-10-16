@@ -24,7 +24,8 @@ public:
     void Attack(Renderer& renderer);
     void Draw(Renderer& renderer);
     bool IsCollidingWith(Entity& toCheck);
-
+    int GetLives() const;
+    int GetWeapons() const;
 protected:
 
 private:
