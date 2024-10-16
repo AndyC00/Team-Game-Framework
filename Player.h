@@ -23,15 +23,16 @@ public:
     void Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer);
     void Attack(Renderer& renderer);
     void Draw(Renderer& renderer);
-    bool IsCollidingWith(Entity& toCheck);
     int GetLives() const;
     int GetWeapons() const;
     void SetDead();
+    void TakeDamage(int damage);
 protected:
 
 private:
     // Member data:
     Vector2 m_facingDirection;  // The direction the player is facing
+    float m_invincibilityRemaining;
     float m_moveSpeed;
     int m_currentWeapon;
     int m_lives;  // Player's remaining lives

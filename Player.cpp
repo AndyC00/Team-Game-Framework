@@ -6,18 +6,20 @@
 #include <iostream>
 
 const float PLAYER_MOVE_SPEED = 210.0f;
+const float INVINCIBILITY_DURATION = 1.0f;
 
 Player::Player()
     : Entity(),
     m_facingDirection(1, 0),
     m_moveSpeed(PLAYER_MOVE_SPEED),
-    m_lives(3),
+    m_lives(5),
     m_currentWeapon(1),
     m_attackCooldown(0.3f),
     m_attackCooldownRemaining(0.0f),
     m_pFmodSystem(nullptr),
     m_pMeleeSound(nullptr),
-    m_pShootSound(nullptr)
+    m_pShootSound(nullptr),
+    m_invincibilityRemaining(0.0f)
 {
     // Initialize FMOD system
     FMOD::System_Create(&m_pFmodSystem);
@@ -56,6 +58,11 @@ bool Player::Initialise(Renderer& renderer)
 
 void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer)
 {
+    // Update invincibility timer
+    if (m_invincibilityRemaining > 0.0f)
+    {
+        m_invincibilityRemaining -= deltaTime;
+    }
     // Initialize the movement vector
     Vector2 movement(0.0f, 0.0f);
     // When melee attack the player stand still
@@ -239,15 +246,21 @@ void Player::Draw(Renderer& renderer)
     }
 }
 
-//bool Player::IsCollidingWith(Entity& toCheck)
-//{
-//    Entity::IsCollidingWith(toCheck);
-//}
-
 int Player::GetLives() const
 {
     return m_lives;
 }
+
+void Player::TakeDamage(int damage)
+{
+    if (m_invincibilityRemaining <= 0.0f)  // Check if player is invincible
+    {
+        m_lives -= damage;
+        // Set the invincibility timer
+        m_invincibilityRemaining = INVINCIBILITY_DURATION;
+    }
+}
+
 
 int Player::GetWeapons() const
 {

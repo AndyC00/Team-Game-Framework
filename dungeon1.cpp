@@ -168,6 +168,8 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 	{
 		m_Enemy2->Process(deltaTime);
 	}
+	CheckCollisions();
+	
 }
 
 void Dungeon1Scene::Draw(Renderer& renderer)
@@ -225,6 +227,20 @@ void Dungeon1Scene::DebugDraw()
 	m_pCentre->SetGreenTint(tint[1]);
 	m_pCentre->SetBlueTint(tint[2]);
 	m_pCentre->SetAlpha(tint[3]);
+
+	if (m_pPlayer)
+	{
+		ImGui::Text("Player HP: %d", m_pPlayer->GetLives());
+		// Check if the player has taken damage
+		if (m_pPlayer->GetLives() < 5) 
+		{
+			ImGui::TextColored(ImVec4(1, 0, 0, 1), "Player took damage!");
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Player is at full health.");
+		}
+	}
 }
 
 void Dungeon1Scene::CheckCollisions()
@@ -235,26 +251,28 @@ void Dungeon1Scene::CheckCollisions()
 		{
 			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
 			{
-				//todo: decrease player's hp ... m_pPlayer->GetLives
-				//if(hp<=0)
-				//{
+				m_pPlayer->TakeDamage(1);
+				if (m_pPlayer->GetLives() == 0)
+				{
 					m_pPlayer->SetDead();
-				//}
-			}
-		}
-		for (auto& enemy : m_Enemies2)
-		{
-			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
-			{
-				//todo: decrease player's hp ... m_pPlayer->GetLives
-				//if(hp<=0)
-				//{
-				m_pPlayer->SetDead();
-				//}
+				}
 			}
 		}
 
-		//enemy collision check:
+		//put a breakpoint here because I see the enemyS in m_Enemies2 has null values
+		for (auto& enemyS : m_Enemies2)
+		{
+			/*if (enemyS->IsAlive() && m_pPlayer->IsCollidingWith(*enemyS))
+			{
+				m_pPlayer->TakeDamage(1);
+				if (m_pPlayer->GetLives() == 0)
+				{
+					m_pPlayer->SetDead();
+				}
+			}*/
+		}
+
+		/*//enemy collision check:
 		for (auto& enemy : m_Enemies1)
 		{
 			if (enemy->IsAlive() && enemy->IsCollidingWith())
@@ -268,6 +286,6 @@ void Dungeon1Scene::CheckCollisions()
 			{
 				enemy->SetDead();
 			}
-		}
+		}*/
 	}
 }
