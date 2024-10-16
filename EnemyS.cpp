@@ -25,9 +25,17 @@ m_moveDistance(50.0f),
 m_moveRange(80.0f),
 m_pMagic(nullptr),
 m_MagicTimer(2.0f),
-m_attackRange(80.0f)		// the range of attack detection
+m_attackRange(80.0f),		// the range of attack detection
+m_pFmodSystem(nullptr),
+m_pAttackSound(nullptr)
 {
 	m_bAlive = true;
+	// Initialize FMOD system
+	FMOD::System_Create(&m_pFmodSystem);
+	m_pFmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
+
+	// Load sound
+	m_pFmodSystem->createSound("sounds\\explosion.mp3", FMOD_DEFAULT, 0, &m_pAttackSound);
 }
 
 EnemyS::~EnemyS()
@@ -37,6 +45,10 @@ EnemyS::~EnemyS()
 		delete m_pMagic;
 		m_pMagic = nullptr;
 	}
+
+	m_pAttackSound->release();
+	m_pFmodSystem->close();
+	m_pFmodSystem->release();
 }
 
 bool EnemyS::Initialise(Renderer& renderer)
@@ -204,8 +216,11 @@ void EnemyS::CreateMagic()
 		float angle = atan2f(direction.y, direction.x) * (180.0f / static_cast<float>(M_PI));
 
 		m_pMagic->SetPosition(m_position, angle);
+		m_pFmodSystem->playSound(m_pAttackSound, 0, false, nullptr);
+		m_pFmodSystem->update();
 
 		m_MagicTimer = 2.0f;
+
 
 		std::cout << "Magic created at position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
 }

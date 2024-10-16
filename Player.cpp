@@ -237,3 +237,13 @@ void Player::Draw(Renderer& renderer)
         meleeHitbox->Draw(renderer);
     }
 }
+
+int Player::GetLives() const
+{
+    return m_lives;
+}
+
+int Player::GetWeapons() const
+{
+    return m_currentWeapon;
+}

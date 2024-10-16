@@ -7,9 +7,12 @@
 #include "Player.h"
 
 #include "imgui/imgui.h"
+#include "renderer.h"
 
 // Library includes:
 #include <cassert>
+#include <SDL_ttf.h>
+#include<string>
 
 Dungeon1Scene::Dungeon1Scene() :
 	m_pCentre(0),
@@ -18,7 +21,9 @@ Dungeon1Scene::Dungeon1Scene() :
 	m_Enemy1(nullptr),
 	m_Enemy2(nullptr),
 	m_pPlayer(nullptr),
-	m_pRenderer(nullptr)
+	m_pRenderer(nullptr),
+	m_pPlayerHPSprite(nullptr),
+	m_pPlayerWeaponSprite(nullptr)
 {
 
 }
@@ -36,14 +41,23 @@ Dungeon1Scene::~Dungeon1Scene()
 		delete m_Enemy2;
 	}
 	m_Enemies2.clear();
+	delete m_pPlayer; // Clean up the player
 
-	delete m_pPlayer;
+	delete m_pZapPow[0];
+	m_pZapPow[0] = 0;
+
+	delete m_pZapPow[1];
+	m_pZapPow[1] = 0;
+
+	delete m_pPlayerHPSprite;
+	delete m_pPlayerWeaponSprite;
 }
 
 bool Dungeon1Scene::Initialise(Renderer& renderer)
 {
 	m_pRenderer = &renderer;
 	m_pCentre = renderer.CreateSprite("Sprites\\board8x8.png");
+
 
 	const int BOARD_HALF_WIDTH = m_pCentre->GetWidth() / 2;
 	const int BOARD_HALF_HEIGHT = m_pCentre->GetHeight() / 2;
@@ -76,7 +90,67 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 		m_Enemies2.push_back(m_Enemy2);
 	}
 
+	// Load static text textures into the Texture Manager... 
+	m_pRenderer->CreateStaticText("HP:", 36);
+
+	// Generate sprites that use the static text textures... 
+	m_pZapPow[0] = m_pRenderer->CreateSprite("HP:");
+	m_pZapPow[0]->SetX(100);
+	m_pZapPow[0]->SetY(50);
+	m_pZapPow[0]->SetAngle(0);
+
+	// Create initial HP texture
+	m_pPlayerHPSprite = UpdatePlayerHPTexture(m_pPlayer->GetLives());
+	m_pPlayerHPSprite->SetX(250);
+	m_pPlayerHPSprite->SetY(50);
+
+
+	// Create static text for weapon label
+	m_pRenderer->CreateStaticText("Weapon:", 36);
+	m_pZapPow[1] = m_pRenderer->CreateSprite("Weapon:");
+	m_pZapPow[1]->SetX(100);
+	m_pZapPow[1]->SetY(100);
+
+	// Create initial weapon texture
+	m_pPlayerWeaponSprite = UpdatePlayerWeaponTexture(m_pPlayer->GetWeapons());
+	m_pPlayerWeaponSprite->SetX(250);
+	m_pPlayerWeaponSprite->SetY(100);
 	return true;
+}
+
+Sprite* Dungeon1Scene::UpdatePlayerHPTexture(int playerHP)
+{
+	// Convert HP to a string
+	std::string hpText = std::to_string(playerHP);
+
+	// Use the renderer to create a new texture for this dynamic text
+	m_pRenderer->CreateStaticText(hpText.c_str(), 36);
+
+	// Create a sprite using the newly generated texture
+	Sprite* hpSprite = m_pRenderer->CreateSprite(hpText.c_str());
+
+	return hpSprite;
+}
+
+Sprite* Dungeon1Scene::UpdatePlayerWeaponTexture(int currentWeapon)
+{
+	std::string weaponText;
+	if (currentWeapon == 1)
+	{
+		weaponText = "Melee";
+	}
+	else if (currentWeapon == 2)
+	{
+		weaponText = "Projectile";
+	}
+
+	// Use the renderer to create a new texture for the current weapon
+	m_pRenderer->CreateStaticText(weaponText.c_str(), 36);
+
+	// Create a sprite using the newly generated texture
+	Sprite* weaponSprite = m_pRenderer->CreateSprite(weaponText.c_str());
+
+	return weaponSprite;
 }
 
 void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
@@ -119,6 +193,12 @@ void Dungeon1Scene::Draw(Renderer& renderer)
 
 	//draw the player
 	m_pPlayer->Draw(renderer);
+
+	m_pZapPow[0]->Draw(renderer); // Draw HP label
+	m_pPlayerHPSprite->Draw(renderer); // Draw dynamic player HP
+
+	m_pZapPow[1]->Draw(renderer); // Draw Weapon label
+	m_pPlayerWeaponSprite->Draw(renderer); // Draw current weapon
 }
 
 void Dungeon1Scene::DebugDraw()
