@@ -215,7 +215,6 @@ void Dungeon1Scene::DebugDraw()
 	m_pCentre->SetX(position[0]);
 	m_pCentre->SetY(position[1]);
 
-
 	float tint[4];
 	tint[0] = m_pCentre->GetRedTint();
 	tint[1] = m_pCentre->GetGreenTint();
@@ -230,18 +229,14 @@ void Dungeon1Scene::DebugDraw()
 
 void Dungeon1Scene::CheckCollisions()
 {
-	//if (m_pPlayer && m_pPlayer->IsAlive())
-	//{
-	//	for (auto& enemy : m_pEnemies)
-	//	{
-	//		if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
-	//		{
-	//			m_pPlayer->SetDead();
-
-	//			Game::pSoundsystem->playSound(soundname, nullptr, false, &channel);
-
-	//			CreateExplosion(enemy->GetPosition().x, enemy->GetPosition().y);
-	//		}
-	//	}
-	//}
+	if (m_pPlayer && m_pPlayer->IsAlive())
+	{
+		for (auto& enemy : m_Enemies1)
+		{
+			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
+			{
+				m_pPlayer->SetDead();
+			}
+		}
+	}
 }

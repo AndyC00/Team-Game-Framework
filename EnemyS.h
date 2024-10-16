@@ -18,6 +18,8 @@ public:
 	bool Initialise(Renderer& renderer);
 	void Process(float deltaTime);
 	void Draw(Renderer& renderer);
+	bool IsAlive() const;
+	void SetDead();
 
 protected:
 	void CreateMagic();
@@ -28,6 +30,7 @@ private:
 
 	//member data:
 public:
+	bool m_bAlive;
 
 protected:
 	

@@ -224,3 +224,13 @@ void EnemyS::CreateMagic()
 
 		std::cout << "Magic created at position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
 }
+
+bool EnemyS::IsAlive() const
+{
+	return m_bAlive;
+}
+
+void EnemyS::SetDead()
+{
+	m_bAlive = false;
+}
