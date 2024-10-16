@@ -235,7 +235,38 @@ void Dungeon1Scene::CheckCollisions()
 		{
 			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
 			{
+				//todo: decrease player's hp ... m_pPlayer->GetLives
+				//if(hp<=0)
+				//{
+					m_pPlayer->SetDead();
+				//}
+			}
+		}
+		for (auto& enemy : m_Enemies2)
+		{
+			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
+			{
+				//todo: decrease player's hp ... m_pPlayer->GetLives
+				//if(hp<=0)
+				//{
 				m_pPlayer->SetDead();
+				//}
+			}
+		}
+
+		//enemy collision check:
+		for (auto& enemy : m_Enemies1)
+		{
+			if (enemy->IsAlive() && enemy->IsCollidingWith())
+			{
+				enemy->SetDead();
+			}
+		}
+		for (auto& enemy : m_Enemies1)
+		{
+			if (enemy->IsAlive() && enemy->IsCollidingWith())
+			{
+				enemy->SetDead();
 			}
 		}
 	}
