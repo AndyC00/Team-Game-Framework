@@ -4,6 +4,7 @@
 #include "Magic.h"
 #include "Entity.h"
 #include "Player.h"
+#include "fmod.hpp"
 
 
 class EnemyS : public Entity
@@ -44,6 +45,8 @@ private:
 	Magic* m_pMagic;
 	Player* m_pPlayer;
 	Renderer* m_pRenderer;
+	FMOD::System* m_pFmodSystem;
+	FMOD::Sound* m_pAttackSound;
 };
 
 #endif // _ENEMYS_H_
