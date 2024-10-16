@@ -17,7 +17,10 @@ Player::Player()
     m_attackCooldownRemaining(0.0f),
     m_pFmodSystem(nullptr),
     m_pMeleeSound(nullptr),
-    m_pShootSound(nullptr)
+    m_pShootSound(nullptr),
+    newMeleeHitbox(nullptr),
+    newProjectile(nullptr),
+    m_bAlive(true)
 {
     // Initialize FMOD system
     FMOD::System_Create(&m_pFmodSystem);
@@ -50,6 +53,7 @@ bool Player::Initialise(Renderer& renderer)
 {
     m_pSprite = renderer.CreateSprite("Sprites\\Hunter.png");
     m_pSprite->SetScale(0.1f);
+
     return true;
 }
 
@@ -195,7 +199,7 @@ void Player::Attack(Renderer& renderer)
         std::cout << "Melee attack in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
         // Create a new melee hitbox
-        MeleeHitbox* newMeleeHitbox = new MeleeHitbox();
+        newMeleeHitbox = new MeleeHitbox();
         if (newMeleeHitbox->Initialise(renderer, m_position, m_facingDirection))
         {
             
@@ -210,7 +214,7 @@ void Player::Attack(Renderer& renderer)
         std::cout << "Shooting projectile in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
         // Create a new projectile and store it
-        Projectile* newProjectile = new Projectile();
+        newProjectile = new Projectile();
         if (newProjectile->Initialise(renderer, m_position, m_facingDirection))
         {
             m_projectiles.push_back(newProjectile);
@@ -239,10 +243,10 @@ void Player::Draw(Renderer& renderer)
     }
 }
 
-//bool Player::IsCollidingWith(Entity& toCheck)
-//{
-//    Entity::IsCollidingWith(toCheck);
-//}
+bool Player::IsCollidingWith(Entity& toCheck)
+{
+    return Entity::IsCollidingWith(toCheck);
+}
 
 int Player::GetLives() const
 {
@@ -257,4 +261,14 @@ int Player::GetWeapons() const
 void Player::SetDead()
 {
     m_bAlive = false;
+}
+
+MeleeHitbox* Player::GetMelee()
+{
+    return newMeleeHitbox;
+}
+
+Projectile* Player::GetProjectile()
+{
+    return newProjectile;
 }

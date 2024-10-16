@@ -27,9 +27,14 @@ public:
     int GetLives() const;
     int GetWeapons() const;
     void SetDead();
+    MeleeHitbox* GetMelee();
+    Projectile* GetProjectile();
+
 protected:
 
 private:
+
+
     // Member data:
     Vector2 m_facingDirection;  // The direction the player is facing
     float m_moveSpeed;
@@ -45,6 +50,9 @@ private:
     FMOD::Sound* m_pMeleeSound;
 
 public:
+    MeleeHitbox* newMeleeHitbox;
+    Projectile* newProjectile;
+    bool m_bAlive;
 
 protected:
 

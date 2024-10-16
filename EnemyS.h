@@ -20,6 +20,7 @@ public:
 	void Draw(Renderer& renderer);
 	bool IsAlive() const;
 	void SetDead();
+	bool IsCollidingWith(Entity& toCheck);
 
 protected:
 	void CreateMagic();
