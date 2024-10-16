@@ -19,7 +19,7 @@ public:
 	bool IsNearBoundary(Vector2 m_position);
 	bool IsAlive() const;
 	void SetDead();
-	bool IsCollidingWith(Entity& toCheck);
+	//bool IsCollidingWith(Entity& toCheck);
 
 protected:
 	bool IsWithinRange();
