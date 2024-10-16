@@ -4,6 +4,7 @@
 // Local includes:
 #include "scene.h"
 #include "EnemyS.h"
+#include "EnemySlime.h"
 #include "Player.h"
 #include "renderer.h"
 

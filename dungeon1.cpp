@@ -4,9 +4,7 @@
 // Local includes:
 #include "renderer.h"
 #include "sprite.h"
-#include "EnemyS.h"
 #include "Player.h"
-#include "EnemySlime.h"
 
 #include "imgui/imgui.h"
 
@@ -74,7 +72,7 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 	for (int i = 0; i < 5; i++)
 	{
 		m_Enemy2 = new EnemySlime(m_pPlayer);
-		m_Enemy2->Initialise(renderer);
+		m_Enemy2->Initialise2(renderer);
 		m_Enemies2.push_back(m_Enemy2);
 	}
 

@@ -165,10 +165,10 @@ void EnemyS::Draw(Renderer& renderer)
 
 bool EnemyS::IsNearBoundary(Vector2 m_position)
 {
-	float margin = 35.0f;	//the distance to trigger the function
+	float margin = 100.0f;	//the distance to trigger the function
 
 	return (m_position.x <= margin || m_position.x >= 1860.0f - margin ||
-		m_position.y <= margin || m_position.y >= 1060.0f - margin);
+		m_position.y <= margin || m_position.y >= 1050.0f - margin);
 }
 
 bool EnemyS::IsWithinRange()

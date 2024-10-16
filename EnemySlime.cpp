@@ -33,13 +33,14 @@ EnemySlime::~EnemySlime()
 	
 }
 
-bool EnemySlime::Initialise(Renderer& renderer, const char* pcFilename)
+bool EnemySlime::Initialise2(Renderer& renderer)
 {
 	m_pRenderer = &renderer;
 
 	m_slime = m_pRenderer->CreateAnimatedSprite("Sprites\\slime.png");
 	m_slime->SetupFrames(47, 47);
-	m_slime->SetFrameDuration(0.1f);
+	m_slime->SetScale(1.65);
+	m_slime->SetFrameDuration(0.15f);
 	m_slime->SetLooping(true);
 	m_slime->Animate();
 
@@ -50,6 +51,9 @@ bool EnemySlime::Initialise(Renderer& renderer, const char* pcFilename)
 	m_position = Vector2(m_x, m_y);
 	m_targetPosition = m_position;
 	m_velocity = Vector2(0.0f, 0.0f);
+
+	m_slime->SetX(static_cast<int>(m_x));
+	m_slime->SetY(static_cast<int>(m_y));
 
 	return true;
 }
@@ -117,8 +121,14 @@ void EnemySlime::Process(float deltaTime)
 			}
 		}
 
-		m_pSprite->SetX(static_cast<int>(m_position.x));
-		m_pSprite->SetY(static_cast<int>(m_position.y));
+		//go back if near the edge of the screen
+		if (IsNearBoundary(m_position))
+		{
+			
+		}
+
+		m_slime->SetX(static_cast<int>(m_position.x));
+		m_slime->SetY(static_cast<int>(m_position.y));
 		//std::cout << "Enemy Position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
 	}
 	else
@@ -130,15 +140,15 @@ void EnemySlime::Process(float deltaTime)
 
 void EnemySlime::Draw(Renderer& renderer)
 {
-	Entity::Draw(renderer);
+	m_slime->Draw(renderer);
 }
 
 bool EnemySlime::IsNearBoundary(Vector2 m_position)
 {
-	float margin = 35.0f;	//the distance to trigger the function
+	float margin = 100.0f;	//the distance to trigger the function
 
 	return (m_position.x <= margin || m_position.x >= 1860.0f - margin ||
-		m_position.y <= margin || m_position.y >= 1060.0f - margin);
+		m_position.y <= margin || m_position.y >= 1050.0f - margin);
 }
 
 bool EnemySlime::IsWithinRange()
