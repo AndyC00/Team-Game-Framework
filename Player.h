@@ -23,7 +23,6 @@ public:
     void Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer);
     void Attack(Renderer& renderer);
     void Draw(Renderer& renderer);
-    bool IsCollidingWith(Entity& toCheck);
     int GetLives() const;
     int GetWeapons() const;
     void SetDead();

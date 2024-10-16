@@ -165,9 +165,6 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 {
 	m_pPlayer->Process(deltaTime, inputSystem, *m_pRenderer);
 
-	m_pCentre->SetAngle(0);
-	m_pCentre->Process(deltaTime);
-
 	for (auto& m_Enemy1 : m_Enemies1)
 	{
 		m_Enemy1->Process(deltaTime);
@@ -175,6 +172,12 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 	for (auto& m_Enemy2 : m_Enemies2)
 	{
 		m_Enemy2->Process(deltaTime);
+	}
+
+	// Ladder collision check: if player collides with the ladder, load a new room
+	if (m_ladder.IsAlive() && m_pPlayer->IsCollidingWith(m_ladder))
+	{
+		NewRoom(); // Load a new room on ladder collision
 	}
 
 	if (inputSystem.GetMouseButtonState(SDL_BUTTON_RIGHT) == BS_PRESSED)    //TEST - THIS IS COLLISION CHECKING WITH THE WALLS
@@ -263,27 +266,6 @@ void Dungeon1Scene::SpawnLadder()   // Spawns the ladder in the room
 void Dungeon1Scene::DebugDraw()
 {
 	ImGui::Text("Scene: TitleScene");
-	ImGui::InputFloat("Rotation speed", &m_rotationSpeed);
-	float scale = m_pCentre->GetScale();
-	ImGui::SliderFloat("Demo scale", &scale, 0.0f, 2.0f, "%.3f");
-	m_pCentre->SetScale(scale);
-
-	int position[2];
-	position[0] = m_pCentre->GetX(); position[1] = m_pCentre->GetY();
-	ImGui::InputInt2("Demo position", position);
-	m_pCentre->SetX(position[0]);
-	m_pCentre->SetY(position[1]);
-
-	float tint[4];
-	tint[0] = m_pCentre->GetRedTint();
-	tint[1] = m_pCentre->GetGreenTint();
-	tint[2] = m_pCentre->GetBlueTint();
-	tint[3] = m_pCentre->GetAlpha();
-	ImGui::ColorEdit4("Demo tint", tint);
-	m_pCentre->SetRedTint(tint[0]);
-	m_pCentre->SetGreenTint(tint[1]);
-	m_pCentre->SetBlueTint(tint[2]);
-	m_pCentre->SetAlpha(tint[3]);
 }
 
 //void Dungeon1Scene::CheckCollisions()

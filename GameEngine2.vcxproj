@@ -215,6 +215,13 @@
     <ClInclude Include="vector2.h" />
     <ClInclude Include="vertexarray.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Rooms\Room1.json" />
+    <None Include="Assets\Rooms\Room2.json" />
+    <None Include="Assets\Rooms\Room3.json" />
+    <None Include="Assets\Rooms\Room4.json" />
+    <None Include="Assets\Rooms\Room5.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
