@@ -59,7 +59,7 @@ Dungeon1Scene::~Dungeon1Scene()
 bool Dungeon1Scene::Initialise(Renderer& renderer)
 {
 	m_pRenderer = &renderer;
-	m_pCentre = renderer.CreateSprite("Sprites\\board8x8.png");
+	m_pCentre = renderer.CreateSprite("Sprites\\scenes\\Background.png");
 
 
 	const int BOARD_HALF_WIDTH = m_pCentre->GetWidth() / 2;
@@ -194,6 +194,8 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 	{
 		SpawnLadder();
 	}
+  
+	CheckCollisions();
 }
 
 void Dungeon1Scene::Draw(Renderer& renderer)
@@ -286,47 +288,47 @@ void Dungeon1Scene::DebugDraw()
 	m_pCentre->SetAlpha(tint[3]);
 }
 
-//void Dungeon1Scene::CheckCollisions()
-//{
-//	if (m_pPlayer && m_pPlayer->IsAlive())
-//	{
-//		for (auto& enemy : m_Enemies1)
-//		{
-//			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
-//			{
-//				//todo: decrease player's hp ... m_pPlayer->GetLives
-//				//if(hp<=0)
-//				//{
-//					m_pPlayer->SetDead();
-//				//}
-//			}
-//		}
-//		for (auto& enemy : m_Enemies2)
-//		{
-//			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
-//			{
-//				//todo: decrease player's hp ... m_pPlayer->GetLives
-//				//if(hp<=0)
-//				//{
-//				m_pPlayer->SetDead();
-//				//}
-//			}
-//		}
-//
-//		//enemy collision check:
-//		for (auto& enemy : m_Enemies1)
-//		{
-//			if (enemy->IsAlive() && enemy->IsCollidingWith())
-//			{
-//				enemy->SetDead();
-//			}
-//		}
-//		for (auto& enemy : m_Enemies1)
-//		{
-//			if (enemy->IsAlive() && enemy->IsCollidingWith())
-//			{
-//				enemy->SetDead();
-//			}
-//		}
-//	}
-//}
+void Dungeon1Scene::CheckCollisions()
+{
+	if (m_pPlayer && m_pPlayer->IsAlive())
+	{
+		for (auto& enemy : m_Enemies1)
+		{
+			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
+			{
+				//todo: decrease player's hp ... m_pPlayer->GetLives
+				//if(hp<=0)
+				//{
+					m_pPlayer->SetDead();
+				//}
+			}
+		}
+		for (auto& enemy : m_Enemies2)
+		{
+			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
+			{
+				//todo: decrease player's hp ... m_pPlayer->GetLives
+				//if(hp<=0)
+				//{
+				m_pPlayer->SetDead();
+				//}
+			}
+		}
+
+		//enemy collision check:
+		for (auto& enemy : m_Enemies1)
+		{
+			if (enemy->IsAlive() && enemy->IsCollidingWith(*(m_pPlayer->GetMelee())))
+			{
+				enemy->SetDead();
+			}
+		}
+		for (auto& enemy : m_Enemies1)
+		{
+			if (enemy->IsAlive() && enemy->IsCollidingWith(*(m_pPlayer->GetProjectile())))
+			{
+				enemy->SetDead();
+			}
+		}
+	}
+}
