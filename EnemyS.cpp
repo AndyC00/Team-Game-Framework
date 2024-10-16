@@ -234,3 +234,8 @@ void EnemyS::SetDead()
 {
 	m_bAlive = false;
 }
+
+bool EnemyS::IsCollidingWith(Entity& toCheck)
+{
+	return Entity::IsCollidingWith(toCheck);
+}

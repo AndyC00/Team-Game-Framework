@@ -142,6 +142,7 @@
     <ClCompile Include="animatedsprite.cpp" />
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="dungeon1.cpp" />
+    <ClCompile Include="DungeonRoom.cpp" />
     <ClCompile Include="EnemySlime.cpp" />
     <ClCompile Include="EnemyS.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="inputsystem.cpp" />
     <ClCompile Include="InstructionScene.cpp" />
+    <ClCompile Include="ladder.cpp" />
     <ClCompile Include="logmanager.cpp" />
     <ClCompile Include="Magic.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -177,6 +179,7 @@
     <ClInclude Include="animatedsprite.h" />
     <ClInclude Include="ball.h" />
     <ClInclude Include="dungeon1.h" />
+    <ClInclude Include="DungeonRoom.h" />
     <ClInclude Include="EnemySlime.h" />
     <ClInclude Include="EnemyS.h" />
     <ClInclude Include="Entity.h" />
@@ -193,6 +196,8 @@
     <ClInclude Include="inlinehelpers.h" />
     <ClInclude Include="inputsystem.h" />
     <ClInclude Include="InstructionScene.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="ladder.h" />
     <ClInclude Include="logmanager.h" />
     <ClInclude Include="Magic.h" />
     <ClInclude Include="matrix4.h" />

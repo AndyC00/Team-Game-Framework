@@ -27,9 +27,14 @@ public:
     int GetWeapons() const;
     void SetDead();
     void TakeDamage(int damage);
+    MeleeHitbox* GetMelee();
+    Projectile* GetProjectile();
+
 protected:
 
 private:
+
+
     // Member data:
     Vector2 m_facingDirection;  // The direction the player is facing
     float m_invincibilityRemaining;
@@ -46,6 +51,9 @@ private:
     FMOD::Sound* m_pMeleeSound;
 
 public:
+    MeleeHitbox* newMeleeHitbox;
+    Projectile* newProjectile;
+    bool m_bAlive;
 
 protected:
 
