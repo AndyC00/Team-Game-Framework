@@ -86,39 +86,40 @@ void EnemyS::Process(float deltaTime)
 		}
 
 		//enemy movement:
-		if (IsWithinRange())
+		if (IsNearBoundary(m_position))
 		{
-			//heading towards the player if within range:
-			m_targetPosition = m_pPlayer->GetPosition();
-			Vector2 directionToPlayer = m_targetPosition - m_position;
-
-			float length = directionToPlayer.Length();
-			//std::cout << "Direction Length: " << length << std::endl;
-
-			directionToPlayer.Normalise();
-			m_position += directionToPlayer * m_speed * deltaTime;
+			const float screenWidth = 1860.0f;
+			const float screenHeight = 1050.0f;
+			m_targetPosition = Vector2(screenWidth / 2.0f, screenHeight / 2.0f);
 		}
 		else
 		{
-			m_moveTimer += deltaTime;
-
-			if (m_moveTimer >= m_moveInterval)
+			if (IsWithinRange())
 			{
-				m_moveTimer = 0.0f;
+				m_targetPosition = m_pPlayer->GetPosition();
+			}
+			else
+			{
+				m_moveTimer += deltaTime;
 
-				float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
-				Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
-				Vector2 potentialPosition = m_position + displacement;
+				if (m_moveTimer >= m_moveInterval)
+				{
+					m_moveTimer = 0.0f;
 
-				if ((potentialPosition - m_position).Length() <= m_moveRange)
-				{
-					m_targetPosition = potentialPosition;
-				}
-				else
-				{
-					displacement.Normalise();
-					displacement *= m_moveRange;
-					m_targetPosition = m_position + displacement;
+					float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
+					Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
+					Vector2 potentialPosition = m_position + displacement;
+
+					if ((potentialPosition - m_position).Length() <= m_moveRange)
+					{
+						m_targetPosition = potentialPosition;
+					}
+					else
+					{
+						displacement.Normalise();
+						displacement *= m_moveRange;
+						m_targetPosition = m_position + displacement;
+					}
 				}
 			}
 		}
