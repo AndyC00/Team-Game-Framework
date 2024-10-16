@@ -7,6 +7,8 @@
 #include "EnemySlime.h"
 #include "Player.h"
 #include "renderer.h"
+#include "DungeonRoom.h"
+#include "ladder.h"
 
 // Library includes:
 #include <vector>
@@ -27,6 +29,10 @@ public:
     virtual bool Initialise(Renderer& renderer);
     virtual void Process(float deltaTime, InputSystem& inputSystem);
     virtual void Draw(Renderer& renderer);
+
+    virtual void NewRoom();
+    virtual void SpawnLadder();
+
     Sprite* m_pZapPow[4];
     Sprite* UpdatePlayerHPTexture(int playerHP);
     Sprite* m_pPlayerHPSprite;
@@ -59,6 +65,9 @@ protected:
 private:
     EnemyS* m_Enemy1;
     EnemySlime* m_Enemy2;
+
+    DungeonRoom m_dungeonRoom; // DungeonRoom instance
+    Ladder m_ladder; // Ladder instance
 };
 
 #endif // _DUNGEON1_H_
