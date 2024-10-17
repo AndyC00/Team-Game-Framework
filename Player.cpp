@@ -19,7 +19,7 @@ Player::Player()
     m_pFmodSystem(nullptr),
     m_pMeleeSound(nullptr),
     m_pShootSound(nullptr),
-    m_invincibilityRemaining(0.0f)
+    m_invincibilityRemaining(0.0f),
     newMeleeHitbox(nullptr),
     newProjectile(nullptr),
     m_bAlive(true)

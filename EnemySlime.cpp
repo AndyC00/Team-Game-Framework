@@ -172,7 +172,24 @@ void EnemySlime::SetDead()
 	m_bAlive = false;
 }
 
-bool EnemySlime::IsCollidingWith(Entity& toCheck)
+float EnemySlime::GetRadius() const
 {
-	return Entity::IsCollidingWith(toCheck);
+	if (m_slime)
+	{
+		int frameWidth = 47;
+		int frameHeight = 47;
+
+		float scale = m_slime->GetScale();
+
+		float actualWidth = frameWidth * scale;
+		float actualHeight = frameHeight * scale;
+
+		float radius = (actualWidth + actualHeight) / 4.0f;
+
+		return radius;
+	}
+	else
+	{
+		return 0.0f;
+	}
 }

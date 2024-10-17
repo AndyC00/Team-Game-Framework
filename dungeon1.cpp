@@ -12,7 +12,9 @@
 // Library includes:
 #include <cassert>
 #include <SDL_ttf.h>
-#include<string>
+#include <SDL.h>
+#include <cmath>
+#include <string>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -189,7 +191,7 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 	}
   
 	CheckCollisions();
-  UpdatePlayerWeaponUI();
+	UpdatePlayerWeaponUI();
 }
 
 void Dungeon1Scene::Draw(Renderer& renderer)
@@ -223,7 +225,11 @@ void Dungeon1Scene::Draw(Renderer& renderer)
 	//m_pPlayerHPSprite->Draw(renderer); // Draw dynamic player HP
 
 	m_pZapPow[1]->Draw(renderer); // Draw Weapon label
-	m_pPlayerWeaponSprite->Draw(renderer); // Draw current weapon
+
+	if (m_pPlayerWeaponSprite)
+	{
+		m_pPlayerWeaponSprite->Draw(renderer); // Draw current weapon
+	}
 
 	// Draw each heart sprite in m_pPlayerHP
 	for (Sprite* heartSprite : m_pPlayerHP)
@@ -319,10 +325,9 @@ void Dungeon1Scene::CheckCollisions()
 			}
 		}
 
-		//put a breakpoint here because I see the enemyS in m_Enemies2 has null values
-		/*for (auto& enemyS : m_Enemies2)
+		for (auto& enemySlime : m_Enemies2)
 		{
-			if (enemyS->IsAlive() && m_pPlayer->IsCollidingWith(*enemyS))
+			if (enemySlime->IsAlive() && m_pPlayer->IsCollidingWith(*enemySlime))
 			{
 				m_pPlayer->TakeDamage(1);
 				if (m_pPlayer->GetLives() == 0)
@@ -330,7 +335,7 @@ void Dungeon1Scene::CheckCollisions()
 					m_pPlayer->SetDead();
 				}
 			}
-		}*/
+		}
 
 		/*//enemy collision check:
 		for (auto& enemy : m_Enemies1)
