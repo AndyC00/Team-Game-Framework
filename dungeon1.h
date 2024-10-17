@@ -34,12 +34,12 @@ public:
     virtual void SpawnLadder();
 
     Sprite* m_pZapPow[4];
-    Sprite* UpdatePlayerHPTexture(int playerHP);
     Sprite* m_pPlayerHPSprite;
+    std::vector<Sprite*> m_pPlayerHP;
+    void UpdatePlayerHPUI();
 
     Sprite* m_pPlayerWeaponSprite;
-    Sprite* UpdatePlayerWeaponTexture(int currentWeapon);
-
+    void UpdatePlayerWeaponUI();
 
 protected:
 

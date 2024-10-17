@@ -6,20 +6,20 @@
 #include <iostream>
 
 const float PLAYER_MOVE_SPEED = 210.0f;
+const float INVINCIBILITY_DURATION = 1.0f;
 
 Player::Player()
     : Entity(),
     m_facingDirection(1, 0),
     m_moveSpeed(PLAYER_MOVE_SPEED),
-    m_lives(3),
+    m_lives(5),
     m_currentWeapon(1),
     m_attackCooldown(0.3f),
     m_attackCooldownRemaining(0.0f),
     m_pFmodSystem(nullptr),
     m_pMeleeSound(nullptr),
     m_pShootSound(nullptr),
-    newMeleeHitbox(nullptr),
-    newProjectile(nullptr),
+    m_invincibilityRemaining(0.0f),
     m_bAlive(true)
 {
     // Initialize FMOD system
@@ -37,11 +37,13 @@ Player::~Player()
     {
         delete projectile;  // Clean up projectiles when player is destroyed
     }
+    m_projectiles.clear();
 
     for (auto melee : m_melee)
     {
         delete melee;
     }
+    m_melee.clear();
 
     m_pShootSound->release();
     m_pMeleeSound->release();
@@ -60,6 +62,11 @@ bool Player::Initialise(Renderer& renderer)
 
 void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer)
 {
+    // Update invincibility timer
+    if (m_invincibilityRemaining > 0.0f)
+    {
+        m_invincibilityRemaining -= deltaTime;
+    }
     // Initialize the movement vector
     Vector2 movement(0.0f, 0.0f);
     // When melee attack the player stand still
@@ -199,13 +206,16 @@ void Player::Attack(Renderer& renderer)
         std::cout << "Melee attack in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
         // Create a new melee hitbox
-        newMeleeHitbox = new MeleeHitbox();
-        if (newMeleeHitbox->Initialise(renderer, m_position, m_facingDirection))
+        auto meleeHitbox = new MeleeHitbox();
+        if (meleeHitbox->Initialise(renderer, m_position, m_facingDirection))
         {
-            
-            m_melee.push_back(newMeleeHitbox);
+            m_melee.push_back(meleeHitbox);
             m_pFmodSystem->playSound(m_pMeleeSound, 0, false, nullptr);
             m_pFmodSystem->update();
+        }
+        else
+        {
+            delete meleeHitbox;
         }
     }
     // Projectile attack
@@ -214,13 +224,17 @@ void Player::Attack(Renderer& renderer)
         std::cout << "Shooting projectile in direction: (" << m_facingDirection.x << ", " << m_facingDirection.y << ")" << std::endl;
 
         // Create a new projectile and store it
-        newProjectile = new Projectile();
-        if (newProjectile->Initialise(renderer, m_position, m_facingDirection))
+        auto projectile = new Projectile();
+        if (projectile->Initialise(renderer, m_position, m_facingDirection))
         {
-            m_projectiles.push_back(newProjectile);
+            m_projectiles.push_back(projectile);
             // Play shooting sound
             m_pFmodSystem->playSound(m_pShootSound, 0, false, nullptr);
             m_pFmodSystem->update();
+        }
+        else
+        {
+            delete projectile;
         }
     }
 }
@@ -243,15 +257,21 @@ void Player::Draw(Renderer& renderer)
     }
 }
 
-bool Player::IsCollidingWith(Entity& toCheck)
-{
-    return Entity::IsCollidingWith(toCheck);
-}
-
 int Player::GetLives() const
 {
     return m_lives;
 }
+
+void Player::TakeDamage(int damage)
+{
+    if (m_invincibilityRemaining <= 0.0f)  // Check if player is invincible
+    {
+        m_lives -= damage;
+        // Set the invincibility timer
+        m_invincibilityRemaining = INVINCIBILITY_DURATION;
+    }
+}
+
 
 int Player::GetWeapons() const
 {
@@ -263,12 +283,12 @@ void Player::SetDead()
     m_bAlive = false;
 }
 
-MeleeHitbox* Player::GetMelee()
+std::vector<MeleeHitbox*>& Player::GetMeleeHitboxes()
 {
-    return newMeleeHitbox;
+    return m_melee;
 }
 
-Projectile* Player::GetProjectile()
+std::vector<Projectile*>& Player::GetProjectiles()
 {
-    return newProjectile;
+    return m_projectiles;
 }
