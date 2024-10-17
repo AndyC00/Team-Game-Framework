@@ -235,6 +235,12 @@ bool EnemyS::IsAlive() const
 void EnemyS::SetDead()
 {
 	m_bAlive = false;
+
+	if (m_pMagic)
+	{
+		delete m_pMagic;
+		m_pMagic = nullptr;
+	}
 }
 
 bool EnemyS::IsCollidingWith(Entity& toCheck)

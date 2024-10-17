@@ -1,4 +1,4 @@
-// This include:
+﻿// This include:
 #include "dungeon1.h"
 
 // Local includes:
@@ -21,7 +21,7 @@
 #include <ctime>
 
 Dungeon1Scene::Dungeon1Scene() :
-	m_pCentre(0),
+	m_pCentre(nullptr),
 	m_angle(0.0f),
 	m_rotationSpeed(0.0f),
 	m_Enemy1(nullptr),
@@ -190,9 +190,9 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 	{
 		SpawnLadder();
 	}
-  
-	CheckCollisions();
+
 	UpdatePlayerWeaponUI();
+	CheckCollisions();
 }
 
 void Dungeon1Scene::Draw(Renderer& renderer)
@@ -298,7 +298,7 @@ void Dungeon1Scene::DebugDraw()
 	{
 		ImGui::Text("Player HP: %d", m_pPlayer->GetLives());
 		// Check if the player has taken damage
-		if (m_pPlayer->GetLives() < 5) 
+		if (m_pPlayer->GetLives() < 5)
 		{
 			ImGui::TextColored(ImVec4(1, 0, 0, 1), "Player took damage!");
 		}
@@ -354,26 +354,44 @@ void Dungeon1Scene::CheckCollisions()
 		}
 
 		// enemy getting damage:
-		MeleeHitbox* m_Melee = m_pPlayer->GetMelee();
-		if (m_Melee)
+		for (auto meleeHitbox : m_pPlayer->GetMeleeHitboxes())
 		{
-			for (auto& enemy : m_Enemies1)
+			if (meleeHitbox)
 			{
-				if (enemy->IsAlive() && enemy->IsCollidingWith(*m_Melee))
+				for (auto enemy : m_Enemies1)
 				{
-					enemy->SetDead();
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*meleeHitbox))
+					{
+						enemy->SetDead();
+					}
+				}
+				for (auto enemy : m_Enemies2)
+				{
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*meleeHitbox))
+					{
+						enemy->SetDead();
+					}
 				}
 			}
 		}
 
-		Projectile* m_projectile = m_pPlayer->GetProjectile();
-		if (m_projectile)
+		for (auto projectile : m_pPlayer->GetProjectiles())
 		{
-			for (auto& enemy : m_Enemies1)
+			if (projectile)
 			{
-				if (enemy->IsAlive() && enemy->IsCollidingWith(*m_projectile))
+				for (auto enemy : m_Enemies1)
 				{
-					enemy->SetDead();
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*projectile))
+					{
+						enemy->SetDead();
+					}
+				}
+				for (auto enemy : m_Enemies2)
+				{
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*projectile))
+					{
+						enemy->SetDead();
+					}
 				}
 			}
 		}

@@ -126,6 +126,11 @@ void Entity::SetAngle(float angle)
 
 bool Entity::IsCollidingWith(Entity& toCheck)
 {
+    if (!IsAlive() || !toCheck.IsAlive())
+    {
+        return false;
+    }
+
     float distanceSquared = (m_position - toCheck.GetPosition()).LengthSquared();
     float combinedRadius = GetRadius() + toCheck.GetRadius();
     return distanceSquared <= (combinedRadius * combinedRadius);
