@@ -135,7 +135,10 @@ void EnemySlime::Process(float deltaTime)
 
 void EnemySlime::Draw(Renderer& renderer)
 {
-	m_slime->Draw(renderer);
+	if (IsAlive())
+	{
+		m_slime->Draw(renderer);
+	}
 }
 
 bool EnemySlime::IsNearBoundary(Vector2 m_position)

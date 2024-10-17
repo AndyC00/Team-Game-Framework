@@ -5,6 +5,7 @@
 #include "renderer.h"
 #include "sprite.h"
 #include "Player.h"
+#include "Magic.h"
 
 #include "imgui/imgui.h"
 #include "renderer.h"
@@ -312,15 +313,30 @@ void Dungeon1Scene::CheckCollisions()
 {
 	if (m_pPlayer && m_pPlayer->IsAlive())
 	{
-		for (auto& enemy : m_Enemies1)
+		// player getting damage:
+		for (auto& skeleton : m_Enemies1)
 		{
-			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
+			if (skeleton->IsAlive() && m_pPlayer->IsCollidingWith(*skeleton))
 			{
 				m_pPlayer->TakeDamage(1);
 				UpdatePlayerHPUI();
 				if (m_pPlayer->GetLives() == 0)
 				{
 					m_pPlayer->SetDead();
+				}
+			}
+
+			Magic* magic = skeleton->GetMagic();
+			if (magic)
+			{
+				if (m_pPlayer->IsCollidingWith(*magic))
+				{
+					m_pPlayer->TakeDamage(1);
+					UpdatePlayerHPUI();
+					if (m_pPlayer->GetLives() == 0)
+					{
+						m_pPlayer->SetDead();
+					}
 				}
 			}
 		}
@@ -337,20 +353,29 @@ void Dungeon1Scene::CheckCollisions()
 			}
 		}
 
-		/*//enemy collision check:
-		for (auto& enemy : m_Enemies1)
+		// enemy getting damage:
+		MeleeHitbox* m_Melee = m_pPlayer->GetMelee();
+		if (m_Melee)
 		{
-			if (enemy->IsAlive() && enemy->IsCollidingWith(*(m_pPlayer->GetMelee())))
+			for (auto& enemy : m_Enemies1)
 			{
-				enemy->SetDead();
+				if (enemy->IsAlive() && enemy->IsCollidingWith(*m_Melee))
+				{
+					enemy->SetDead();
+				}
 			}
 		}
-		for (auto& enemy : m_Enemies1)
+
+		Projectile* m_projectile = m_pPlayer->GetProjectile();
+		if (m_projectile)
 		{
-			if (enemy->IsAlive() && enemy->IsCollidingWith(*(m_pPlayer->GetProjectile())))
+			for (auto& enemy : m_Enemies1)
 			{
-				enemy->SetDead();
+				if (enemy->IsAlive() && enemy->IsCollidingWith(*m_projectile))
+				{
+					enemy->SetDead();
+				}
 			}
-		}*/
+		}
 	}
 }

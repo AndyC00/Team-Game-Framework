@@ -172,8 +172,10 @@ void EnemyS::Draw(Renderer& renderer)
 	{
 		m_pMagic->Draw(renderer);
 	}
-
-	Entity::Draw(renderer);
+	if (IsAlive())
+	{
+		Entity::Draw(renderer);
+	}
 }
 
 bool EnemyS::IsNearBoundary(Vector2 m_position)
@@ -238,4 +240,9 @@ void EnemyS::SetDead()
 bool EnemyS::IsCollidingWith(Entity& toCheck)
 {
 	return Entity::IsCollidingWith(toCheck);
+}
+
+Magic* EnemyS::GetMagic()
+{
+	return m_pMagic;
 }
