@@ -12,8 +12,8 @@
 #include <iostream>
 
 
-Magic::Magic()
-	: m_angle(0.0f)
+Magic::Magic() :Entity()
+	, m_angle(0.0f)
 	, m_pRenderer(nullptr)
 	, newMagic(nullptr)
 {
@@ -106,4 +106,26 @@ bool Magic::IsAnimating() const
 		return newMagic->IsAnimating();
 	}
 	return false;
+}
+
+float Magic::GetRadius() const
+{
+	if (newMagic)
+	{
+		int frameWidth = 128;
+		int frameHeight = 128;
+
+		float scale = newMagic->GetScale();
+
+		float actualWidth = frameWidth * scale;
+		float actualHeight = frameHeight * scale;
+
+		float radius = (actualWidth + actualHeight) / 4.0f;
+
+		return radius;
+	}
+	else
+	{
+		return 0.0f;
+	}
 }

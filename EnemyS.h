@@ -21,6 +21,7 @@ public:
 	bool IsAlive() const;
 	void SetDead();
 	bool IsCollidingWith(Entity& toCheck);
+	Magic* GetMagic();
 
 protected:
 	void CreateMagic();

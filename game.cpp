@@ -11,6 +11,7 @@
 #include "TitleScene.h"
 #include "dungeon1.h"
 #include "InstructionScene.h"
+#include "Lose.h"
 
 // Library includes: 
 #include "renderer.h" 
@@ -113,8 +114,14 @@ bool Game::Initialise()
 	pScene1->Initialise(*m_pRenderer);
 	m_scenes.push_back(pScene1);
 
-	Scene* pScene2 = 0;
+	Scene* pScene3 = 0;
+	pScene3 = new LoseScene();
+	pScene3->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene3);
+
+	Dungeon1Scene* pScene2 = 0;
 	pScene2 = new Dungeon1Scene();
+	pScene2->OnSceneChange(&m_iCurrentScene);
 	pScene2->Initialise(*m_pRenderer);
 	m_scenes.push_back(pScene2);
 

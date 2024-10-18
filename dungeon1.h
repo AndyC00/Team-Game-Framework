@@ -34,12 +34,13 @@ public:
     virtual void SpawnLadder();
 
     Sprite* m_pZapPow[4];
-    Sprite* UpdatePlayerHPTexture(int playerHP);
     Sprite* m_pPlayerHPSprite;
+    std::vector<Sprite*> m_pPlayerHP;
+    void OnSceneChange(int* sceneIndex);
+    void UpdatePlayerHPUI();
 
     Sprite* m_pPlayerWeaponSprite;
-    Sprite* UpdatePlayerWeaponTexture(int currentWeapon);
-
+    void UpdatePlayerWeaponUI();
 
 protected:
 
@@ -65,6 +66,8 @@ protected:
 private:
     EnemyS* m_Enemy1;
     EnemySlime* m_Enemy2;
+
+    int* m_sceneIndex;
 
     DungeonRoom m_dungeonRoom; // DungeonRoom instance
     Ladder m_ladder; // Ladder instance

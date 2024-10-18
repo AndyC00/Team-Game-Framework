@@ -26,7 +26,7 @@ public:
 	void SetDead();
 	void SetAlive();
 
-	float GetRadius();
+	virtual float GetRadius() const;
 	float GetAngle() const;
 	void SetAngle(float angle);
 	void SetPosition(const Vector2& position, float angle);

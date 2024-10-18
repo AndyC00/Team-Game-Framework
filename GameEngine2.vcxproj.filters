@@ -100,6 +100,11 @@
     <ClCompile Include="InstructionScene.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="DungeonRoom.cpp" />
+    <ClCompile Include="ladder.cpp" />
+    <ClCompile Include="Lose.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -205,6 +210,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="InstructionScene.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonRoom.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="ladder.h" />
+    <ClInclude Include="Lose.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
