@@ -323,6 +323,7 @@ void Dungeon1Scene::CheckCollisions()
 				if (m_pPlayer->GetLives() == 0)
 				{
 					m_pPlayer->SetDead();
+					(*m_sceneIndex)--;
 				}
 			}
 
@@ -336,6 +337,7 @@ void Dungeon1Scene::CheckCollisions()
 					if (m_pPlayer->GetLives() == 0)
 					{
 						m_pPlayer->SetDead();
+						(*m_sceneIndex)--;
 					}
 				}
 			}
@@ -349,6 +351,7 @@ void Dungeon1Scene::CheckCollisions()
 				if (m_pPlayer->GetLives() == 0)
 				{
 					m_pPlayer->SetDead();
+					(*m_sceneIndex)--;
 				}
 			}
 		}
@@ -396,4 +399,9 @@ void Dungeon1Scene::CheckCollisions()
 			}
 		}
 	}
+}
+
+void Dungeon1Scene::OnSceneChange(int* sceneIndex)
+{
+	m_sceneIndex = sceneIndex;
 }
