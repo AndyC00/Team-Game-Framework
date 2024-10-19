@@ -29,13 +29,35 @@ Dungeon1Scene::Dungeon1Scene() :
 	m_pPlayer(nullptr),
 	m_pRenderer(nullptr),
 	m_pPlayerHPSprite(nullptr),
-	m_pPlayerWeaponSprite(nullptr)
+	m_pPlayerWeaponSprite(nullptr),
+	fmodSystem(nullptr),
+	musicChannel(nullptr),
+	backgroundMusic(nullptr),
+	m_bMusicPlaying(false)
 {
+	// FMOD initialization
+	FMOD::System_Create(&fmodSystem);
+	fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
 
+
+	// Load background music
+	fmodSystem->createSound("sounds\\game theme.mp3", FMOD_LOOP_NORMAL, 0, &backgroundMusic);
 }
 
 Dungeon1Scene::~Dungeon1Scene()
 {
+	// Clean up FMOD sounds
+	if (backgroundMusic)
+	{
+		backgroundMusic->release();
+	}
+
+	if (fmodSystem)
+	{
+		fmodSystem->close();
+		fmodSystem->release();
+	}
+
 	delete m_pCentre;
 	for (auto& m_Enemy1 : m_Enemies1)
 	{
@@ -404,4 +426,27 @@ void Dungeon1Scene::CheckCollisions()
 void Dungeon1Scene::OnSceneChange(int* sceneIndex)
 {
 	m_sceneIndex = sceneIndex;
+}
+
+void Dungeon1Scene::PlayBackgroundMusic()
+{
+	if (!m_bMusicPlaying)
+	{
+		fmodSystem->playSound(backgroundMusic, 0, false, &musicChannel);
+		m_bMusicPlaying = true;
+	}
+}
+
+void Dungeon1Scene::StopBackgroundMusic()
+{
+	if (m_bMusicPlaying)
+	{
+		musicChannel->stop();
+		m_bMusicPlaying = false;
+	}
+}
+
+bool Dungeon1Scene::IsMusicPlaying() const
+{
+	return m_bMusicPlaying;
 }

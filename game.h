@@ -25,6 +25,7 @@ public:
 	bool Initialise(); 
 	bool DoGameLoop(); 
 	void Quit();
+	void PlayMusicGameState();
 
 protected:
 	void Process(float deltaTime); 

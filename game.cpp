@@ -185,11 +185,40 @@ bool Game::DoGameLoop()
 	return m_bLooping;
 }
 
+void Game::PlayMusicGameState()
+{
+	// Check if the current scene is KugelHolleSceneGame to play music
+	Dungeon1Scene* Dungeon1 = dynamic_cast<Dungeon1Scene*>(m_scenes[m_iCurrentScene]);
+	if (Dungeon1)
+	{
+		// Ensure the music is playing only in the game scene
+		if (!Dungeon1->IsMusicPlaying())
+		{
+			Dungeon1->PlayBackgroundMusic();
+		}
+	}
+	else
+	{
+		// Stop the music if we switch to a different scene
+		for (Scene* scene : m_scenes)
+		{
+			Dungeon1Scene* otherscene = dynamic_cast<Dungeon1Scene*>(scene);
+			if (otherscene && otherscene->IsMusicPlaying())
+			{
+				otherscene->StopBackgroundMusic();
+			}
+		}
+	}
+}
+
+
 void Game::Process(float deltaTime)
 {
 	ProcessFrameCounting(deltaTime);
 	// TODO: Add game objects to process here!
 	m_scenes[m_iCurrentScene]->Process(deltaTime, *m_pInputSystem);
+	
+	PlayMusicGameState();
 
 	//right click mouse to move to next scene:
 	if (m_pInputSystem->GetMouseButtonState(SDL_BUTTON_RIGHT) == BS_PRESSED && m_iCurrentScene < m_scenes.size() - 1)
