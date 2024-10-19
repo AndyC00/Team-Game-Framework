@@ -14,7 +14,7 @@ public:
 	//member methods:
 public:
 	bool Initialise2(Renderer& renderer);
-	void Process(float deltaTime);
+	void Process(float deltaTime, DungeonRoom& dungeonRoom);
 	void Draw(Renderer& renderer);
 	bool IsNearBoundary(Vector2 m_position);
 	bool IsAlive() const;

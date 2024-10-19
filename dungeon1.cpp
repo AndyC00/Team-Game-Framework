@@ -193,15 +193,16 @@ bool Dungeon1Scene::AreAllEnemiesDead()
 
 void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 {
-	m_pPlayer->Process(deltaTime, inputSystem, *m_pRenderer);
+	// Pass the dungeon room to the player's process for collision checks
+	m_pPlayer->Process(deltaTime, inputSystem, *m_pRenderer, m_dungeonRoom);
 
 	for (auto& m_Enemy1 : m_Enemies1)
 	{
-		m_Enemy1->Process(deltaTime);
+		m_Enemy1->Process(deltaTime, m_dungeonRoom);  // Pass dungeon room to enemies for collision
 	}
 	for (auto& m_Enemy2 : m_Enemies2)
 	{
-		m_Enemy2->Process(deltaTime);
+		m_Enemy2->Process(deltaTime, m_dungeonRoom);  // Pass dungeon room to enemies for collision
 	}
 
 	if (AreAllEnemiesDead())
@@ -209,15 +210,15 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 		SpawnLadder();
 	}
 
-	// Ladder collision check: if player collides with the ladder, load a new room
 	if (m_ladder.IsAlive() && m_pPlayer->IsCollidingWith(m_ladder))
 	{
-		NewRoom(); // Load a new room on ladder collision
+		NewRoom();
 	}
 
 	UpdatePlayerWeaponUI();
 	CheckCollisions();
 }
+
 
 void Dungeon1Scene::Draw(Renderer& renderer)
 {

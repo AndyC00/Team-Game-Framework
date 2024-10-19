@@ -7,6 +7,7 @@
 
 const float PLAYER_MOVE_SPEED = 210.0f;
 const float INVINCIBILITY_DURATION = 1.0f;
+const int TILE_SIZE = 64;
 
 Player::Player()
     : Entity(),
@@ -60,80 +61,55 @@ bool Player::Initialise(Renderer& renderer)
 }
 
 
-void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer)
+void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer, DungeonRoom& dungeonRoom)
 {
     // Update invincibility timer
     if (m_invincibilityRemaining > 0.0f)
     {
         m_invincibilityRemaining -= deltaTime;
     }
+
     // Initialize the movement vector
     Vector2 movement(0.0f, 0.0f);
-    // When melee attack the player stand still
+
+    // When melee attack, the player stands still
     if (!(m_currentWeapon == 1 && m_attackCooldownRemaining > 0.0f))
     {
         // Check for movement input and accumulate movement in respective directions
         if (inputSystem.GetKeyState(SDL_SCANCODE_UP) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_UP) == BS_HELD)
         {
-            // Move up
-            movement.y -= 1.0f;
-            // Face up
-            m_facingDirection.Set(0.0f, -1.0f);
+            movement.y -= 1.0f;  // Move up
+            m_facingDirection.Set(0.0f, -1.0f);  // Face up
         }
         if (inputSystem.GetKeyState(SDL_SCANCODE_DOWN) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_DOWN) == BS_HELD)
         {
-            // Move down
-            movement.y += 1.0f;
-            // Face down
-            m_facingDirection.Set(0.0f, 1.0f);
+            movement.y += 1.0f;  // Move down
+            m_facingDirection.Set(0.0f, 1.0f);  // Face down
         }
         if (inputSystem.GetKeyState(SDL_SCANCODE_LEFT) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_LEFT) == BS_HELD)
         {
-            // Move left
-            movement.x -= 1.0f;
-            // Face left
-            m_facingDirection.Set(-1.0f, 0.0f);
-           
+            movement.x -= 1.0f;  // Move left
+            m_facingDirection.Set(-1.0f, 0.0f);  // Face left
         }
         if (inputSystem.GetKeyState(SDL_SCANCODE_RIGHT) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_RIGHT) == BS_HELD)
         {
-            // Move right
-            movement.x += 1.0f;
-            // Face right
-            m_facingDirection.Set(1.0f, 0.0f);
+            movement.x += 1.0f;  // Move right
+            m_facingDirection.Set(1.0f, 0.0f);  // Face right
         }
     }
 
-    // Update the position based on the movement vector and speed
-    m_position += movement * m_moveSpeed * deltaTime;
+    // Calculate new position based on the movement vector and speed
+    Vector2 newPosition = m_position + (movement * m_moveSpeed * deltaTime);
 
-    // Get screen boundaries from the renderer
-    float screenWidth = static_cast<float>(renderer.GetWidth());
-    float screenHeight = static_cast<float>(renderer.GetHeight());
+    // Convert new position to tile coordinates for collision checking
+    int tileX = static_cast<int>(newPosition.x / TILE_SIZE);
+    int tileY = static_cast<int>(newPosition.y / TILE_SIZE);
 
-    // Define player's sprite width and height for boundary checking
-    float spriteWidth = m_pSprite->GetWidth() * m_pSprite->GetScale();
-    float spriteHeight = m_pSprite->GetHeight() * m_pSprite->GetScale();
-
-    // Boundary check to keep the player within the screen
-    if (m_position.x < 0.0f)
+    // Check if the new tile is passable
+    if (dungeonRoom.IsTilePassable(tileX, tileY))
     {
-        m_position.x = 0.0f;
-    }
-
-    if (m_position.x + spriteWidth > screenWidth)
-    {
-        m_position.x = screenWidth - spriteWidth;
-    }
-
-    if (m_position.y < 0.0f)
-    {
-        m_position.y = 0.0f;
-    }
-
-    if (m_position.y + spriteHeight > screenHeight)
-    {
-        m_position.y = screenHeight - spriteHeight;
+        // Only update position if the tile is passable
+        m_position = newPosition;
     }
 
     // Weapon switching
@@ -163,12 +139,10 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     for (auto it = m_projectiles.begin(); it != m_projectiles.end();)
     {
         (*it)->Process(deltaTime);
-        // Remove "dead" projectiles
         if (!(*it)->IsAlive())
         {
             delete* it;
-            // Erase the projectile
-            it = m_projectiles.erase(it);
+            it = m_projectiles.erase(it);  // Remove "dead" projectiles
         }
         else
         {
@@ -180,13 +154,10 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     for (auto it = m_melee.begin(); it != m_melee.end();)
     {
         (*it)->Process(deltaTime);
-
-        // Remove "dead" melee hitboxes
         if (!(*it)->IsAlive())
         {
             delete* it;
-            // Erase the hitbox
-            it = m_melee.erase(it);
+            it = m_melee.erase(it);  // Remove "dead" melee hitboxes
         }
         else
         {
@@ -194,8 +165,10 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
         }
     }
 
+    // Call base Entity process (if needed)
     Entity::Process(deltaTime);
 }
+
 
 
 void Player::Attack(Renderer& renderer)
