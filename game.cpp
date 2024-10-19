@@ -109,21 +109,26 @@ bool Game::Initialise()
 	m_scenes.push_back(pScene);
 	m_iCurrentScene = 0;
 
-	Scene* pScene1 = 0;
-	pScene1 = new InstructionScene();
+	Scene* pScene1 = 0; //empty scene to occupy a position
+	pScene1 = new TitleScene();
 	pScene1->Initialise(*m_pRenderer);
-	m_scenes.push_back(pScene1);
+	m_scenes.push_back(pScene);
+
+	Scene* pScene2 = 0;
+	pScene2 = new InstructionScene();
+	pScene2->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene2);
 
 	Scene* pScene3 = 0;
 	pScene3 = new LoseScene();
 	pScene3->Initialise(*m_pRenderer);
 	m_scenes.push_back(pScene3);
 
-	Dungeon1Scene* pScene2 = 0;
-	pScene2 = new Dungeon1Scene();
-	pScene2->OnSceneChange(&m_iCurrentScene);
-	pScene2->Initialise(*m_pRenderer);
-	m_scenes.push_back(pScene2);
+	Dungeon1Scene* pScene4 = 0;
+	pScene4 = new Dungeon1Scene();
+	pScene4->OnSceneChange(&m_iCurrentScene);
+	pScene4->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene4);
 
 	// text renderer at last:
 	// Load static text textures into the Texture Manager... 
@@ -189,7 +194,7 @@ void Game::Process(float deltaTime)
 	//right click mouse to move to next scene:
 	if (m_pInputSystem->GetMouseButtonState(SDL_BUTTON_RIGHT) == BS_PRESSED && m_iCurrentScene < m_scenes.size() - 1)
 	{
-		m_iCurrentScene++;
+		m_iCurrentScene+=2;
 	}
 
 	ButtonState leftArrowState = (m_pInputSystem->GetKeyState(SDL_SCANCODE_LEFT));
