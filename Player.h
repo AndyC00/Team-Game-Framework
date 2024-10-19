@@ -18,7 +18,7 @@ public:
     Player();
     ~Player();
 
-    // Member methods:
+// Member methods:
     bool Initialise(Renderer& renderer);
     void Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer);
     void Attack(Renderer& renderer);
@@ -26,24 +26,35 @@ public:
     int GetLives() const;
     int GetWeapons() const;
     void SetDead();
+    void TakeDamage(int damage);
+    MeleeHitbox* GetMelee();
+    Projectile* GetProjectile();
+
+    std::vector<MeleeHitbox*>& GetMeleeHitboxes();
+    std::vector<Projectile*>& GetProjectiles();
+
 protected:
 
 private:
-    // Member data:
+
+// Member data:
     Vector2 m_facingDirection;  // The direction the player is facing
+    float m_invincibilityRemaining;
     float m_moveSpeed;
     int m_currentWeapon;
     int m_lives;  // Player's remaining lives
     float m_attackCooldownRemaining;
     float m_attackCooldown;
-    std::vector<Projectile*> m_projectiles;  // Store projectiles
-    std::vector<MeleeHitbox*> m_melee;  // Store melee hitboxes
 
     FMOD::System* m_pFmodSystem;
     FMOD::Sound* m_pShootSound;
     FMOD::Sound* m_pMeleeSound;
 
 public:
+    std::vector<Projectile*> m_projectiles;  // Store projectiles
+    std::vector<MeleeHitbox*> m_melee;  // Store melee hitboxes
+
+    bool m_bAlive;
 
 protected:
 

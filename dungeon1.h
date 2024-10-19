@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "DungeonRoom.h"
 #include "ladder.h"
+#include "fmod.hpp"
 
 // Library includes:
 #include <vector>
@@ -34,13 +35,16 @@ public:
     virtual void SpawnLadder();
 
     Sprite* m_pZapPow[4];
-    Sprite* UpdatePlayerHPTexture(int playerHP);
     Sprite* m_pPlayerHPSprite;
+    std::vector<Sprite*> m_pPlayerHP;
+    void OnSceneChange(int* sceneIndex);
+    void UpdatePlayerHPUI();
 
     Sprite* m_pPlayerWeaponSprite;
-    Sprite* UpdatePlayerWeaponTexture(int currentWeapon);
-
-
+    void UpdatePlayerWeaponUI();
+    void StopBackgroundMusic();
+    void PlayBackgroundMusic();
+    bool IsMusicPlaying() const;
 protected:
 
 private:
@@ -66,8 +70,15 @@ private:
     EnemyS* m_Enemy1;
     EnemySlime* m_Enemy2;
 
+    int* m_sceneIndex;
+
     DungeonRoom m_dungeonRoom; // DungeonRoom instance
     Ladder m_ladder; // Ladder instance
+    // FMOD variables for background music
+    FMOD::System* fmodSystem;
+    FMOD::Sound* backgroundMusic;
+    FMOD::Channel* musicChannel;  // Used to control the music (play, stop, etc.)
+    bool m_bMusicPlaying;
 };
 
 #endif // _DUNGEON1_H_

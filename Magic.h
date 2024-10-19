@@ -5,8 +5,9 @@
 #include "sprite.h"
 #include "texture.h"
 #include "animatedsprite.h"
+#include "Entity.h"
 
-class Magic
+class Magic : public Entity
 {
 public:
     Magic();
@@ -19,6 +20,7 @@ public:
     const Vector2& GetPosition() const;
     float GetRadius();
     bool IsAnimating() const;
+    float GetRadius() const;
 
 protected:
     Renderer* m_pRenderer;

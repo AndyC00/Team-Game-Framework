@@ -1,10 +1,11 @@
-// This include:
+﻿// This include:
 #include "dungeon1.h"
 
 // Local includes:
 #include "renderer.h"
 #include "sprite.h"
 #include "Player.h"
+#include "Magic.h"
 
 #include "imgui/imgui.h"
 #include "renderer.h"
@@ -12,13 +13,15 @@
 // Library includes:
 #include <cassert>
 #include <SDL_ttf.h>
-#include<string>
+#include <SDL.h>
+#include <cmath>
+#include <string>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 
 Dungeon1Scene::Dungeon1Scene() :
-	m_pCentre(0),
+	m_pCentre(nullptr),
 	m_angle(0.0f),
 	m_rotationSpeed(0.0f),
 	m_Enemy1(nullptr),
@@ -26,13 +29,35 @@ Dungeon1Scene::Dungeon1Scene() :
 	m_pPlayer(nullptr),
 	m_pRenderer(nullptr),
 	m_pPlayerHPSprite(nullptr),
-	m_pPlayerWeaponSprite(nullptr)
+	m_pPlayerWeaponSprite(nullptr),
+	fmodSystem(nullptr),
+	musicChannel(nullptr),
+	backgroundMusic(nullptr),
+	m_bMusicPlaying(false)
 {
+	// FMOD initialization
+	FMOD::System_Create(&fmodSystem);
+	fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
 
+
+	// Load background music
+	fmodSystem->createSound("sounds\\game theme.mp3", FMOD_LOOP_NORMAL, 0, &backgroundMusic);
 }
 
 Dungeon1Scene::~Dungeon1Scene()
 {
+	// Clean up FMOD sounds
+	if (backgroundMusic)
+	{
+		backgroundMusic->release();
+	}
+
+	if (fmodSystem)
+	{
+		fmodSystem->close();
+		fmodSystem->release();
+	}
+
 	delete m_pCentre;
 	for (auto& m_Enemy1 : m_Enemies1)
 	{
@@ -59,7 +84,7 @@ Dungeon1Scene::~Dungeon1Scene()
 bool Dungeon1Scene::Initialise(Renderer& renderer)
 {
 	m_pRenderer = &renderer;
-	m_pCentre = renderer.CreateSprite("Sprites\\board8x8.png");
+	m_pCentre = renderer.CreateSprite("Sprites\\scenes\\Background.png");
 
 
 	const int BOARD_HALF_WIDTH = m_pCentre->GetWidth() / 2;
@@ -98,6 +123,15 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 		m_Enemies2.push_back(m_Enemy2);
 	}
 
+	// Initialize hearts based on player's lives
+	for (int i = 0; i < m_pPlayer->GetLives(); ++i) {
+		m_pPlayerHPSprite = m_pRenderer->CreateSprite("Sprites\\heart.png");
+		m_pPlayerHPSprite->SetScale(0.3f);
+		m_pPlayerHPSprite->SetX(200 + i * 150);  // Positioning hearts horizontally
+		m_pPlayerHPSprite->SetY(50);
+		m_pPlayerHP.push_back(m_pPlayerHPSprite);
+	}
+
 	// Load static text textures into the Texture Manager... 
 	m_pRenderer->CreateStaticText("HP:", 36);
 
@@ -107,58 +141,42 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 	m_pZapPow[0]->SetY(50);
 	m_pZapPow[0]->SetAngle(0);
 
-	// Create initial HP texture
-	m_pPlayerHPSprite = UpdatePlayerHPTexture(m_pPlayer->GetLives());
-	m_pPlayerHPSprite->SetX(250);
-	m_pPlayerHPSprite->SetY(50);
-
-
 	// Create static text for weapon label
 	m_pRenderer->CreateStaticText("Weapon:", 36);
 	m_pZapPow[1] = m_pRenderer->CreateSprite("Weapon:");
 	m_pZapPow[1]->SetX(100);
 	m_pZapPow[1]->SetY(100);
 
-	// Create initial weapon texture
-	m_pPlayerWeaponSprite = UpdatePlayerWeaponTexture(m_pPlayer->GetWeapons());
-	m_pPlayerWeaponSprite->SetX(250);
-	m_pPlayerWeaponSprite->SetY(100);
 	return true;
 }
 
-Sprite* Dungeon1Scene::UpdatePlayerHPTexture(int playerHP)
+void Dungeon1Scene::UpdatePlayerHPUI()
 {
-	// Convert HP to a string
-	std::string hpText = std::to_string(playerHP);
+	int currentLives = m_pPlayer->GetLives();
 
-	// Use the renderer to create a new texture for this dynamic text
-	m_pRenderer->CreateStaticText(hpText.c_str(), 36);
-
-	// Create a sprite using the newly generated texture
-	Sprite* hpSprite = m_pRenderer->CreateSprite(hpText.c_str());
-
-	return hpSprite;
+	// Remove excess heart sprites when player loses lives
+	while (m_pPlayerHP.size() > currentLives) {
+		delete m_pPlayerHP.back();
+		m_pPlayerHP.pop_back();
+	}
 }
 
-Sprite* Dungeon1Scene::UpdatePlayerWeaponTexture(int currentWeapon)
+void Dungeon1Scene::UpdatePlayerWeaponUI()
 {
-	std::string weaponText;
-	if (currentWeapon == 1)
+	if (m_pPlayer->GetWeapons() == 1)
 	{
-		weaponText = "Melee";
+		m_pPlayerWeaponSprite = m_pRenderer->CreateSprite("Sprites\\sword.png");
+		m_pPlayerWeaponSprite->SetScale(0.2f);
+		m_pPlayerWeaponSprite->SetX(250);
+		m_pPlayerWeaponSprite->SetY(100);
 	}
-	else if (currentWeapon == 2)
+	else
 	{
-		weaponText = "Projectile";
+		m_pPlayerWeaponSprite = m_pRenderer->CreateSprite("Sprites\\gun.png");
+		m_pPlayerWeaponSprite->SetScale(0.2f);
+		m_pPlayerWeaponSprite->SetX(250);
+		m_pPlayerWeaponSprite->SetY(100);
 	}
-
-	// Use the renderer to create a new texture for the current weapon
-	m_pRenderer->CreateStaticText(weaponText.c_str(), 36);
-
-	// Create a sprite using the newly generated texture
-	Sprite* weaponSprite = m_pRenderer->CreateSprite(weaponText.c_str());
-
-	return weaponSprite;
 }
 
 void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
@@ -197,6 +215,9 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 	{
 		SpawnLadder();
 	}
+
+	UpdatePlayerWeaponUI();
+	CheckCollisions();
 }
 
 void Dungeon1Scene::Draw(Renderer& renderer)
@@ -227,10 +248,20 @@ void Dungeon1Scene::Draw(Renderer& renderer)
 	m_pPlayer->Draw(renderer);
 
 	m_pZapPow[0]->Draw(renderer); // Draw HP label
-	m_pPlayerHPSprite->Draw(renderer); // Draw dynamic player HP
+	//m_pPlayerHPSprite->Draw(renderer); // Draw dynamic player HP
 
 	m_pZapPow[1]->Draw(renderer); // Draw Weapon label
-	m_pPlayerWeaponSprite->Draw(renderer); // Draw current weapon
+
+	if (m_pPlayerWeaponSprite)
+	{
+		m_pPlayerWeaponSprite->Draw(renderer); // Draw current weapon
+	}
+
+	// Draw each heart sprite in m_pPlayerHP
+	for (Sprite* heartSprite : m_pPlayerHP)
+	{
+		heartSprite->Draw(renderer);
+	}
 }
 
 void Dungeon1Scene::NewRoom()   // Loads a random room - Need to add enemy spawning and ladder despawning potentially?
@@ -268,47 +299,122 @@ void Dungeon1Scene::DebugDraw()
 	ImGui::Text("Scene: TitleScene");
 }
 
-//void Dungeon1Scene::CheckCollisions()
-//{
-//	if (m_pPlayer && m_pPlayer->IsAlive())
-//	{
-//		for (auto& enemy : m_Enemies1)
-//		{
-//			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
-//			{
-//				//todo: decrease player's hp ... m_pPlayer->GetLives
-//				//if(hp<=0)
-//				//{
-//					m_pPlayer->SetDead();
-//				//}
-//			}
-//		}
-//		for (auto& enemy : m_Enemies2)
-//		{
-//			if (enemy->IsAlive() && m_pPlayer->IsCollidingWith(*enemy))
-//			{
-//				//todo: decrease player's hp ... m_pPlayer->GetLives
-//				//if(hp<=0)
-//				//{
-//				m_pPlayer->SetDead();
-//				//}
-//			}
-//		}
-//
-//		//enemy collision check:
-//		for (auto& enemy : m_Enemies1)
-//		{
-//			if (enemy->IsAlive() && enemy->IsCollidingWith())
-//			{
-//				enemy->SetDead();
-//			}
-//		}
-//		for (auto& enemy : m_Enemies1)
-//		{
-//			if (enemy->IsAlive() && enemy->IsCollidingWith())
-//			{
-//				enemy->SetDead();
-//			}
-//		}
-//	}
-//}
+void Dungeon1Scene::CheckCollisions()
+{
+	if (m_pPlayer && m_pPlayer->IsAlive())
+	{
+		// player getting damage:
+		for (auto& skeleton : m_Enemies1)
+		{
+			if (skeleton->IsAlive() && m_pPlayer->IsCollidingWith(*skeleton))
+			{
+				m_pPlayer->TakeDamage(1);
+				UpdatePlayerHPUI();
+				if (m_pPlayer->GetLives() == 0)
+				{
+					m_pPlayer->SetDead();
+					(*m_sceneIndex)--;
+				}
+			}
+
+			Magic* magic = skeleton->GetMagic();
+			if (magic)
+			{
+				if (m_pPlayer->IsCollidingWith(*magic))
+				{
+					m_pPlayer->TakeDamage(1);
+					UpdatePlayerHPUI();
+					if (m_pPlayer->GetLives() == 0)
+					{
+						m_pPlayer->SetDead();
+						(*m_sceneIndex)--;
+					}
+				}
+			}
+		}
+
+		for (auto& enemySlime : m_Enemies2)
+		{
+			if (enemySlime->IsAlive() && m_pPlayer->IsCollidingWith(*enemySlime))
+			{
+				m_pPlayer->TakeDamage(1);
+				if (m_pPlayer->GetLives() == 0)
+				{
+					m_pPlayer->SetDead();
+					(*m_sceneIndex)--;
+				}
+			}
+		}
+
+		// enemy getting damage:
+		for (auto meleeHitbox : m_pPlayer->GetMeleeHitboxes())
+		{
+			if (meleeHitbox)
+			{
+				for (auto enemy : m_Enemies1)
+				{
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*meleeHitbox))
+					{
+						enemy->SetDead();
+					}
+				}
+				for (auto enemy : m_Enemies2)
+				{
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*meleeHitbox))
+					{
+						enemy->SetDead();
+					}
+				}
+			}
+		}
+
+		for (auto projectile : m_pPlayer->GetProjectiles())
+		{
+			if (projectile)
+			{
+				for (auto enemy : m_Enemies1)
+				{
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*projectile))
+					{
+						enemy->SetDead();
+					}
+				}
+				for (auto enemy : m_Enemies2)
+				{
+					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*projectile))
+					{
+						enemy->SetDead();
+					}
+				}
+			}
+		}
+	}
+}
+
+void Dungeon1Scene::OnSceneChange(int* sceneIndex)
+{
+	m_sceneIndex = sceneIndex;
+}
+
+void Dungeon1Scene::PlayBackgroundMusic()
+{
+	if (!m_bMusicPlaying)
+	{
+		fmodSystem->playSound(backgroundMusic, 0, false, &musicChannel);
+		m_bMusicPlaying = true;
+	}
+}
+
+void Dungeon1Scene::StopBackgroundMusic()
+{
+	if (m_bMusicPlaying)
+	{
+		musicChannel->stop();
+		m_bMusicPlaying = false;
+	}
+}
+
+bool Dungeon1Scene::IsMusicPlaying() const
+{
+	return m_bMusicPlaying;
+}

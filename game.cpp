@@ -11,6 +11,7 @@
 #include "TitleScene.h"
 #include "dungeon1.h"
 #include "InstructionScene.h"
+#include "Lose.h"
 
 // Library includes: 
 #include "renderer.h" 
@@ -108,15 +109,26 @@ bool Game::Initialise()
 	m_scenes.push_back(pScene);
 	m_iCurrentScene = 0;
 
-	Scene* pScene1 = 0;
-	pScene1 = new InstructionScene();
+	Scene* pScene1 = 0; //empty scene to occupy a position
+	pScene1 = new TitleScene();
 	pScene1->Initialise(*m_pRenderer);
-	m_scenes.push_back(pScene1);
+	m_scenes.push_back(pScene);
 
 	Scene* pScene2 = 0;
-	pScene2 = new Dungeon1Scene();
+	pScene2 = new InstructionScene();
 	pScene2->Initialise(*m_pRenderer);
 	m_scenes.push_back(pScene2);
+
+	Scene* pScene3 = 0;
+	pScene3 = new LoseScene();
+	pScene3->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene3);
+
+	Dungeon1Scene* pScene4 = 0;
+	pScene4 = new Dungeon1Scene();
+	pScene4->OnSceneChange(&m_iCurrentScene);
+	pScene4->Initialise(*m_pRenderer);
+	m_scenes.push_back(pScene4);
 
 	// text renderer at last:
 	// Load static text textures into the Texture Manager... 
@@ -173,16 +185,45 @@ bool Game::DoGameLoop()
 	return m_bLooping;
 }
 
+void Game::PlayMusicGameState()
+{
+	// Check if the current scene is KugelHolleSceneGame to play music
+	Dungeon1Scene* Dungeon1 = dynamic_cast<Dungeon1Scene*>(m_scenes[m_iCurrentScene]);
+	if (Dungeon1)
+	{
+		// Ensure the music is playing only in the game scene
+		if (!Dungeon1->IsMusicPlaying())
+		{
+			Dungeon1->PlayBackgroundMusic();
+		}
+	}
+	else
+	{
+		// Stop the music if we switch to a different scene
+		for (Scene* scene : m_scenes)
+		{
+			Dungeon1Scene* otherscene = dynamic_cast<Dungeon1Scene*>(scene);
+			if (otherscene && otherscene->IsMusicPlaying())
+			{
+				otherscene->StopBackgroundMusic();
+			}
+		}
+	}
+}
+
+
 void Game::Process(float deltaTime)
 {
 	ProcessFrameCounting(deltaTime);
 	// TODO: Add game objects to process here!
 	m_scenes[m_iCurrentScene]->Process(deltaTime, *m_pInputSystem);
+	
+	PlayMusicGameState();
 
 	//right click mouse to move to next scene:
 	if (m_pInputSystem->GetMouseButtonState(SDL_BUTTON_RIGHT) == BS_PRESSED && m_iCurrentScene < m_scenes.size() - 1)
 	{
-		m_iCurrentScene++;
+		m_iCurrentScene+=2;
 	}
 
 	ButtonState leftArrowState = (m_pInputSystem->GetKeyState(SDL_SCANCODE_LEFT));
