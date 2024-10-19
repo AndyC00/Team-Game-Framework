@@ -67,17 +67,33 @@ void DungeonRoom::LoadTilemapFromJSON(const std::string& filename)
     }
 }
 
+int DungeonRoom::GetRowCount() const
+{
+    return tilemap.size();  // Return the number of rows (the height of the map)
+}
+
+int DungeonRoom::GetColCount() const
+{
+    if (tilemap.empty())
+    {
+        return 0;  // If there are no rows, return 0 columns
+    }
+
+    return tilemap[0].size();  // Return the number of columns (the width of the map)
+}
+
+
 
 bool DungeonRoom::IsTilePassable(int x, int y)
 {
-    // Check bounds against dynamic tilemap size
-    if (y < 0 || y >= tilemap.size() || x < 0 || x >= tilemap[y].size())
+    // Check if coordinates are out of bounds
+    if (x < 0 || x >= tilemap[0].size() || y < 0 || y >= tilemap.size())
     {
-        return false; // Out of bounds, treat as non-passable.
+        return false;  // Out of bounds
     }
 
-    // Check if the tile is a wall or not. Only walls are non-passable.
-    return (tilemap[y][x] != TILE_WALL);
+    // Return true if the tile is not a wall
+    return tilemap[y][x] != TILE_WALL;
 }
 
 bool DungeonRoom::IsCollisionAt(float x, float y)
