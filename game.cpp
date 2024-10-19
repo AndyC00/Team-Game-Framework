@@ -135,7 +135,7 @@ bool Game::Initialise()
 	m_pRenderer->CreateStaticText("Right Click to Continue", 60);
 
 	// Generate sprites that use the static text textures... 
-	m_pZapPow[0] = m_pRenderer->CreateSprite("Right Click to Continue");
+	m_pZapPow[0] = m_pRenderer->CreateSprite("Right Click to Continue!");
 	m_pZapPow[0]->SetX(900);
 	m_pZapPow[0]->SetY(100);
 	m_pZapPow[0]->SetAngle(0);
