@@ -33,6 +33,8 @@ public:
 
     virtual void NewRoom();
     virtual void SpawnLadder();
+    bool AreAllEnemiesDead();
+    void SpawnEnemies();
 
     Sprite* m_pZapPow[4];
     Sprite* m_pPlayerHPSprite;

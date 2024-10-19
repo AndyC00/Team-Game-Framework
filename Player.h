@@ -9,6 +9,7 @@
 #include "sprite.h"
 #include "MeleeHitbox.h"
 #include "fmod.hpp"
+#include "DungeonRoom.h"
 
 class Sprite;
 
@@ -20,7 +21,7 @@ public:
 
 // Member methods:
     bool Initialise(Renderer& renderer);
-    void Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer);
+    void Process(float deltaTime, InputSystem& inputSystem, Renderer& renderer, DungeonRoom& dungeonRoom);
     void Attack(Renderer& renderer);
     void Draw(Renderer& renderer);
     int GetLives() const;
