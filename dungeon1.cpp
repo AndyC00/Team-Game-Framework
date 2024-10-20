@@ -20,6 +20,8 @@
 #include <cstdlib>
 #include <ctime>
 
+const int TILE_SIZE = 64;
+
 Dungeon1Scene::Dungeon1Scene() :
 	m_pCentre(nullptr),
 	m_angle(0.0f),
@@ -29,13 +31,35 @@ Dungeon1Scene::Dungeon1Scene() :
 	m_pPlayer(nullptr),
 	m_pRenderer(nullptr),
 	m_pPlayerHPSprite(nullptr),
-	m_pPlayerWeaponSprite(nullptr)
+	m_pPlayerWeaponSprite(nullptr),
+	fmodSystem(nullptr),
+	musicChannel(nullptr),
+	backgroundMusic(nullptr),
+	m_bMusicPlaying(false)
 {
+	// FMOD initialization
+	FMOD::System_Create(&fmodSystem);
+	fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
 
+
+	// Load background music
+	fmodSystem->createSound("sounds\\game theme.mp3", FMOD_LOOP_NORMAL, 0, &backgroundMusic);
 }
 
 Dungeon1Scene::~Dungeon1Scene()
 {
+	// Clean up FMOD sounds
+	if (backgroundMusic)
+	{
+		backgroundMusic->release();
+	}
+
+	if (fmodSystem)
+	{
+		fmodSystem->close();
+		fmodSystem->release();
+	}
+
 	delete m_pCentre;
 	for (auto& m_Enemy1 : m_Enemies1)
 	{
@@ -88,18 +112,7 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 	m_pPlayer->GetPosition().y = SCREEN_HEIGHT / 2;
 
 	// Spawn a setting number of enemies:
-	for (int i = 0; i < 5; i++)
-	{
-		m_Enemy1 = new EnemyS(m_pPlayer);
-		m_Enemy1->Initialise(renderer);
-		m_Enemies1.push_back(m_Enemy1);
-	}
-	for (int i = 0; i < 5; i++)
-	{
-		m_Enemy2 = new EnemySlime(m_pPlayer);
-		m_Enemy2->Initialise2(renderer);
-		m_Enemies2.push_back(m_Enemy2);
-	}
+	SpawnEnemies();
 
 	// Initialize hearts based on player's lives
 	for (int i = 0; i < m_pPlayer->GetLives(); ++i) {
@@ -157,43 +170,55 @@ void Dungeon1Scene::UpdatePlayerWeaponUI()
 	}
 }
 
+bool Dungeon1Scene::AreAllEnemiesDead()
+{
+	for (auto& m_Enemy1 : m_Enemies1)
+	{
+		if (m_Enemy1->IsAlive())
+		{
+			return false;
+		}
+	}
+
+	for (auto& m_Enemy2 : m_Enemies2)
+	{
+		if (m_Enemy2->IsAlive())
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 {
-	m_pPlayer->Process(deltaTime, inputSystem, *m_pRenderer);
-
-	m_pCentre->SetAngle(0);
-	m_pCentre->Process(deltaTime);
+	// Pass the dungeon room to the player's process for collision checks
+	m_pPlayer->Process(deltaTime, inputSystem, *m_pRenderer, m_dungeonRoom);
 
 	for (auto& m_Enemy1 : m_Enemies1)
 	{
-		m_Enemy1->Process(deltaTime);
+		m_Enemy1->Process(deltaTime, m_dungeonRoom);  // Pass dungeon room to enemies for collision
 	}
 	for (auto& m_Enemy2 : m_Enemies2)
 	{
-		m_Enemy2->Process(deltaTime);
+		m_Enemy2->Process(deltaTime, m_dungeonRoom);  // Pass dungeon room to enemies for collision
 	}
 
-	if (inputSystem.GetMouseButtonState(SDL_BUTTON_RIGHT) == BS_PRESSED)    //TEST - THIS IS COLLISION CHECKING WITH THE WALLS
-	{
-
-		const Vector2& mousePosition = inputSystem.GetMousePosition();
-
-		// Pass the mouse position to the dungeon room's OnTileClicked method
-		m_dungeonRoom.OnTileClicked(static_cast<int>(mousePosition.x), static_cast<int>(mousePosition.y));
-
-	}
-	if (inputSystem.GetMouseButtonState(SDL_BUTTON_LEFT) == BS_PRESSED)     //TEST - THIS IS ROOM LOADING AND SHOULD BE REPLACED WITH A COLLISION CHECK WITH THE LADDER
-	{
-		NewRoom();
-	}
-	if (inputSystem.GetKeyState(SDL_SCANCODE_SPACE) == BS_PRESSED)		  //TEST - THIS IS LADDER SPAWNING AND SHOULD BE REPLACED WITH CHECK FOR DEAD ENEMIES
+	if (AreAllEnemiesDead())
 	{
 		SpawnLadder();
+	}
+
+	if (m_ladder.IsAlive() && m_pPlayer->IsCollidingWith(m_ladder))
+	{
+		NewRoom();
 	}
 
 	UpdatePlayerWeaponUI();
 	CheckCollisions();
 }
+
 
 void Dungeon1Scene::Draw(Renderer& renderer)
 {
@@ -239,7 +264,7 @@ void Dungeon1Scene::Draw(Renderer& renderer)
 	}
 }
 
-void Dungeon1Scene::NewRoom()   // Loads a random room - Need to add enemy spawning and ladder despawning potentially?
+void Dungeon1Scene::NewRoom()
 {
 	// List of room JSON files
 	const char* roomFiles[4] = {
@@ -259,54 +284,88 @@ void Dungeon1Scene::NewRoom()   // Loads a random room - Need to add enemy spawn
 
 	// Load a random room
 	m_dungeonRoom.LoadTiles(roomFiles[randomIndex]);
+
+	// Call the new method to spawn enemies
+	SpawnEnemies();
 }
+
 
 void Dungeon1Scene::SpawnLadder()   // Spawns the ladder in the room
 {
-	m_ladder.SetPosition(Vector2(320.0f, 320.0f), 0.0f);
-	m_ladder.m_pSprite->SetX(320);
-	m_ladder.m_pSprite->SetY(320);
+	m_ladder.SetPosition(Vector2(740.0f, 640.0f), 0.0f);
+	m_ladder.m_pSprite->SetX(740);
+	m_ladder.m_pSprite->SetY(640);
 	m_ladder.SetAlive();
 }
+
+void Dungeon1Scene::SpawnEnemies()
+{
+	// Clear existing enemies
+	for (auto& m_Enemy1 : m_Enemies1)
+	{
+		delete m_Enemy1;
+	}
+	m_Enemies1.clear();
+
+	for (auto& m_Enemy2 : m_Enemies2)
+	{
+		delete m_Enemy2;
+	}
+	m_Enemies2.clear();
+
+	// Determine number of rows and columns in the tilemap (in tile units)
+	int rows = m_dungeonRoom.GetRowCount();  // Assuming a method that returns the number of rows
+	int cols = m_dungeonRoom.GetColCount();  // Assuming a method that returns the number of columns
+
+	// Respawn enemies at valid positions
+	for (int i = 0; i < 5; i++)
+	{
+		Vector2 position;
+		int tileX, tileY;
+
+		// Randomize until a passable tile is found
+		do {
+			tileX = rand() % cols;  // Random X in grid units (tiles)
+			tileY = rand() % rows;  // Random Y in grid units (tiles)
+		} while (!m_dungeonRoom.IsTilePassable(tileX, tileY));
+
+		// Convert tile coordinates to pixel coordinates
+		position.x = tileX * TILE_SIZE + TILE_SIZE / 2;  // Center of the tile
+		position.y = tileY * TILE_SIZE + TILE_SIZE / 2;  // Center of the tile
+
+		m_Enemy1 = new EnemyS(m_pPlayer);
+		m_Enemy1->Initialise(*m_pRenderer);
+		m_Enemy1->SetPosition(position, 0.0f);  // Set the valid position
+		m_Enemies1.push_back(m_Enemy1);
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		Vector2 position;
+		int tileX, tileY;
+
+		// Randomize until a passable tile is found
+		do {
+			tileX = rand() % cols;  // Random X in grid units (tiles)
+			tileY = rand() % rows;  // Random Y in grid units (tiles)
+		} while (!m_dungeonRoom.IsTilePassable(tileX, tileY));
+
+		// Convert tile coordinates to pixel coordinates
+		position.x = tileX * TILE_SIZE + TILE_SIZE / 2;  // Center of the tile
+		position.y = tileY * TILE_SIZE + TILE_SIZE / 2;  // Center of the tile
+
+		m_Enemy2 = new EnemySlime(m_pPlayer);
+		m_Enemy2->Initialise2(*m_pRenderer);
+		m_Enemy2->SetPosition(position, 0.0f);  // Set the valid position
+		m_Enemies2.push_back(m_Enemy2);
+	}
+}
+
+
 
 void Dungeon1Scene::DebugDraw()
 {
 	ImGui::Text("Scene: TitleScene");
-	ImGui::InputFloat("Rotation speed", &m_rotationSpeed);
-	float scale = m_pCentre->GetScale();
-	ImGui::SliderFloat("Demo scale", &scale, 0.0f, 2.0f, "%.3f");
-	m_pCentre->SetScale(scale);
-
-	int position[2];
-	position[0] = m_pCentre->GetX(); position[1] = m_pCentre->GetY();
-	ImGui::InputInt2("Demo position", position);
-	m_pCentre->SetX(position[0]);
-	m_pCentre->SetY(position[1]);
-
-	float tint[4];
-	tint[0] = m_pCentre->GetRedTint();
-	tint[1] = m_pCentre->GetGreenTint();
-	tint[2] = m_pCentre->GetBlueTint();
-	tint[3] = m_pCentre->GetAlpha();
-	ImGui::ColorEdit4("Demo tint", tint);
-	m_pCentre->SetRedTint(tint[0]);
-	m_pCentre->SetGreenTint(tint[1]);
-	m_pCentre->SetBlueTint(tint[2]);
-	m_pCentre->SetAlpha(tint[3]);
-
-	if (m_pPlayer)
-	{
-		ImGui::Text("Player HP: %d", m_pPlayer->GetLives());
-		// Check if the player has taken damage
-		if (m_pPlayer->GetLives() < 5)
-		{
-			ImGui::TextColored(ImVec4(1, 0, 0, 1), "Player took damage!");
-		}
-		else
-		{
-			ImGui::TextColored(ImVec4(0, 1, 0, 1), "Player is at full health.");
-		}
-	}
 }
 
 void Dungeon1Scene::CheckCollisions()
@@ -404,4 +463,27 @@ void Dungeon1Scene::CheckCollisions()
 void Dungeon1Scene::OnSceneChange(int* sceneIndex)
 {
 	m_sceneIndex = sceneIndex;
+}
+
+void Dungeon1Scene::PlayBackgroundMusic()
+{
+	if (!m_bMusicPlaying)
+	{
+		fmodSystem->playSound(backgroundMusic, 0, false, &musicChannel);
+		m_bMusicPlaying = true;
+	}
+}
+
+void Dungeon1Scene::StopBackgroundMusic()
+{
+	if (m_bMusicPlaying)
+	{
+		musicChannel->stop();
+		m_bMusicPlaying = false;
+	}
+}
+
+bool Dungeon1Scene::IsMusicPlaying() const
+{
+	return m_bMusicPlaying;
 }

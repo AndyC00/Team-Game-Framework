@@ -14,6 +14,7 @@
 #include <cmath>
 #include <iostream>
 
+const int TILE_SIZE = 64;
 
 EnemyS::EnemyS(Player* player) :Entity(),
 m_pRenderer(nullptr),
@@ -75,96 +76,105 @@ bool EnemyS::Initialise(Renderer& renderer)
 	return true;
 }
 
-void EnemyS::Process(float deltaTime)
+void EnemyS::Process(float deltaTime, DungeonRoom& dungeonRoom)
 {
-	if (IsAlive())
-	{
-		//enemy attack:
-		m_MagicTimer -= deltaTime;
+    if (IsAlive())
+    {
+        // Enemy attack logic
+        m_MagicTimer -= deltaTime;
 
-		if (m_pMagic)
-		{
-			m_pMagic->Process(deltaTime);
-			if (!m_pMagic->IsAnimating())
-			{
-				delete m_pMagic;
-				m_pMagic = nullptr;
-				m_MagicTimer = 2.0f; //reset the timer
-			}
-		}
-		else if (m_MagicTimer <= 0.0f && IsWithinRange())
-		{
-			CreateMagic();
-		}
+        if (m_pMagic)
+        {
+            m_pMagic->Process(deltaTime);
+            if (!m_pMagic->IsAnimating())
+            {
+                delete m_pMagic;
+                m_pMagic = nullptr;
+                m_MagicTimer = 2.0f; // Reset the timer
+            }
+        }
+        else if (m_MagicTimer <= 0.0f && IsWithinRange())
+        {
+            CreateMagic();
+        }
 
-		//enemy movement:
-		if (IsNearBoundary(m_position))
-		{
-			const float screenWidth = 1860.0f;
-			const float screenHeight = 1050.0f;
-			m_targetPosition = Vector2(screenWidth / 2.0f, screenHeight / 2.0f);
-		}
-		else
-		{
-			if (IsWithinRange())
-			{
-				m_targetPosition = m_pPlayer->GetPosition();
-			}
-			else
-			{
-				m_moveTimer += deltaTime;
+        // Enemy movement logic
+        if (IsNearBoundary(m_position))
+        {
+            const float screenWidth = 1860.0f;
+            const float screenHeight = 1050.0f;
+            m_targetPosition = Vector2(screenWidth / 2.0f, screenHeight / 2.0f);
+        }
+        else
+        {
+            if (IsWithinRange())
+            {
+                m_targetPosition = m_pPlayer->GetPosition();
+            }
+            else
+            {
+                m_moveTimer += deltaTime;
 
-				if (m_moveTimer >= m_moveInterval)
-				{
-					m_moveTimer = 0.0f;
+                if (m_moveTimer >= m_moveInterval)
+                {
+                    m_moveTimer = 0.0f;
 
-					float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
-					Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
-					Vector2 potentialPosition = m_position + displacement;
+                    float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * static_cast<float>(M_PI);
+                    Vector2 displacement = Vector2(cos(angle), sin(angle)) * m_moveDistance;
+                    Vector2 potentialPosition = m_position + displacement;
 
-					if ((potentialPosition - m_position).Length() <= m_moveRange)
-					{
-						m_targetPosition = potentialPosition;
-					}
-					else
-					{
-						displacement.Normalise();
-						displacement *= m_moveRange;
-						m_targetPosition = m_position + displacement;
-					}
-				}
-			}
-		}
+                    if ((potentialPosition - m_position).Length() <= m_moveRange)
+                    {
+                        m_targetPosition = potentialPosition;
+                    }
+                    else
+                    {
+                        displacement.Normalise();
+                        displacement *= m_moveRange;
+                        m_targetPosition = m_position + displacement;
+                    }
+                }
+            }
+        }
 
-		Vector2 direction = m_targetPosition - m_position;
-		float distanceToTarget = direction.Length();
+        // Calculate movement direction and distance to target
+        Vector2 direction = m_targetPosition - m_position;
+        float distanceToTarget = direction.Length();
 
-		if (distanceToTarget > 0.1f)
-		{
-			direction.Normalise();
+        if (distanceToTarget > 0.1f)
+        {
+            direction.Normalise();
 
-			Vector2 movement = direction * m_speed * deltaTime;
+            Vector2 movement = direction * m_speed * deltaTime;
+            Vector2 newPosition = m_position + movement;
 
-			if (movement.Length() > distanceToTarget)
-			{
-				m_position = m_targetPosition;
-			}
-			else
-			{
-				m_position += movement;
-			}
-		}
+            // Convert new position to tile coordinates for collision checking
+            int tileX = static_cast<int>(newPosition.x / TILE_SIZE);
+            int tileY = static_cast<int>(newPosition.y / TILE_SIZE);
 
-		m_pSprite->SetX(static_cast<int>(m_position.x));
-		m_pSprite->SetY(static_cast<int>(m_position.y));
-		//std::cout << "Enemy Position: (" << m_position.x << ", " << m_position.y << ")" << std::endl;
-	}
-	else
-	{
-		std::cout << "Enemy failed to process!" << std::endl;
-	}
+            // Check if the new tile is passable before updating position
+            if (dungeonRoom.IsTilePassable(tileX, tileY))
+            {
+                if (movement.Length() > distanceToTarget)
+                {
+                    m_position = m_targetPosition;
+                }
+                else
+                {
+                    m_position += movement;
+                }
+            }
+        }
 
+        m_pSprite->SetX(static_cast<int>(m_position.x));
+        m_pSprite->SetY(static_cast<int>(m_position.y));
+    }
+    else
+    {
+        std::cout << "Enemy failed to process!" << std::endl;
+    }
 }
+
 
 void EnemyS::Draw(Renderer& renderer)
 {

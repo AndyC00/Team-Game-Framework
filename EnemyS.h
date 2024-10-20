@@ -16,7 +16,7 @@ public:
 	//member methods:
 public:
 	bool Initialise(Renderer& renderer);
-	void Process(float deltaTime);
+	void Process(float deltaTime, DungeonRoom& dungeonRoom);
 	void Draw(Renderer& renderer);
 	bool IsAlive() const;
 	void SetDead();

@@ -18,6 +18,8 @@ public:
 
     bool IsTilePassable(int x, int y);
     bool IsCollisionAt(float x, float y);
+    int GetRowCount() const;
+	int GetColCount() const;
 
 private:
     Sprite m_floorSprite;
