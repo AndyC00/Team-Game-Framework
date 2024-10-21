@@ -18,7 +18,6 @@ public:
     void Draw(Renderer& renderer);
     void SetPosition(const Vector2& position, float angle);
     const Vector2& GetPosition() const;
-    float GetRadius();
     bool IsAnimating() const;
     float GetRadius() const;
 
