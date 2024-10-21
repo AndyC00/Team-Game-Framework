@@ -17,7 +17,7 @@ Magic::Magic() :Entity()
 	, m_pRenderer(nullptr)
 	, newMagic(nullptr)
 {
-
+	m_bAlive = true;
 }
 
 Magic::~Magic()
@@ -80,6 +80,11 @@ void Magic::Process(float deltaTime)
 	newMagic->SetX(m_position.x);
 	newMagic->SetY(m_position.y);
 
+	if (!newMagic->IsAnimating())
+	{
+		m_bAlive = false;
+	}
+
 	newMagic->Process(deltaTime);
 }
 
@@ -92,11 +97,6 @@ void Magic::Draw(Renderer& renderer)
 const Vector2& Magic::GetPosition() const
 {
 	return m_position;
-}
-
-float Magic::GetRadius()
-{
-	return newMagic->GetWidth() / 2;
 }
 
 bool Magic::IsAnimating() const

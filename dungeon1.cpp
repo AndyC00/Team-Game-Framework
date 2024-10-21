@@ -510,6 +510,7 @@ void Dungeon1Scene::CreateExplosion(float x, float y)
 	newExplosion->SetupFrames(300, 300);
 	newExplosion->SetFrameDuration(0.1f);
 	newExplosion->SetLooping(false);
+	newExplosion->SetScale(0.4);
 	newExplosion->SetX(static_cast<int>(x));
 	newExplosion->SetY(static_cast<int>(y));
 	newExplosion->Animate();
