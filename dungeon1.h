@@ -53,6 +53,8 @@ private:
     Dungeon1Scene(const Dungeon1Scene& Dungeon1Scene);
     Dungeon1Scene& operator = (const Dungeon1Scene& Dungeon1Scene);
     void CheckCollisions();
+    void CreateExplosion(float x, float y);
+    void UpdateExplosions(float deltaTime);
 
     // Member data:
 public:
@@ -65,6 +67,7 @@ protected:
 
     std::vector<EnemyS*> m_Enemies1;
     std::vector<EnemySlime*> m_Enemies2;
+    std::vector<AnimatedSprite*> m_explosions;
     Player* m_pPlayer; 
     Renderer* m_pRenderer;
 

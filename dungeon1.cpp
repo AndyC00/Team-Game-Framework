@@ -71,6 +71,11 @@ Dungeon1Scene::~Dungeon1Scene()
 		delete m_Enemy2;
 	}
 	m_Enemies2.clear();
+	for (auto& pAnimatedSprite : m_explosions)
+	{
+		delete pAnimatedSprite;
+	}
+	m_explosions.clear();
 	delete m_pPlayer; // Clean up the player
 
 	delete m_pZapPow[0];
@@ -217,6 +222,7 @@ void Dungeon1Scene::Process(float deltaTime, InputSystem& inputSystem)
 
 	UpdatePlayerWeaponUI();
 	CheckCollisions();
+	UpdateExplosions(deltaTime);
 }
 
 
@@ -261,6 +267,12 @@ void Dungeon1Scene::Draw(Renderer& renderer)
 	for (Sprite* heartSprite : m_pPlayerHP)
 	{
 		heartSprite->Draw(renderer);
+	}
+
+	//draw explosions when enemies dead
+	for (auto& explosion : m_explosions)
+	{
+		explosion->Draw(renderer);
 	}
 }
 
@@ -425,6 +437,7 @@ void Dungeon1Scene::CheckCollisions()
 					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*meleeHitbox))
 					{
 						enemy->SetDead();
+						CreateExplosion(enemy->GetPosition().x, enemy->GetPosition().y);
 					}
 				}
 				for (auto enemy : m_Enemies2)
@@ -432,6 +445,7 @@ void Dungeon1Scene::CheckCollisions()
 					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*meleeHitbox))
 					{
 						enemy->SetDead();
+						CreateExplosion(enemy->GetPosition().x, enemy->GetPosition().y);
 					}
 				}
 			}
@@ -446,6 +460,7 @@ void Dungeon1Scene::CheckCollisions()
 					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*projectile))
 					{
 						enemy->SetDead();
+						CreateExplosion(enemy->GetPosition().x, enemy->GetPosition().y);
 					}
 				}
 				for (auto enemy : m_Enemies2)
@@ -453,6 +468,7 @@ void Dungeon1Scene::CheckCollisions()
 					if (enemy && enemy->IsAlive() && enemy->IsCollidingWith(*projectile))
 					{
 						enemy->SetDead();
+						CreateExplosion(enemy->GetPosition().x, enemy->GetPosition().y);
 					}
 				}
 			}
@@ -486,4 +502,36 @@ void Dungeon1Scene::StopBackgroundMusic()
 bool Dungeon1Scene::IsMusicPlaying() const
 {
 	return m_bMusicPlaying;
+}
+
+void Dungeon1Scene::CreateExplosion(float x, float y)
+{
+	AnimatedSprite* newExplosion = m_pRenderer->CreateAnimatedSprite("Sprites\\spritesheet.png");
+	newExplosion->SetupFrames(300, 300);
+	newExplosion->SetFrameDuration(0.1f);
+	newExplosion->SetLooping(false);
+	newExplosion->SetX(static_cast<int>(x));
+	newExplosion->SetY(static_cast<int>(y));
+	newExplosion->Animate();
+	m_explosions.push_back(newExplosion);
+}
+
+void Dungeon1Scene::UpdateExplosions(float deltaTime)
+{
+	for (auto it = m_explosions.begin(); it != m_explosions.end();)
+	{
+		AnimatedSprite* explosion = *it;
+
+		explosion->Process(deltaTime);
+
+		if (!explosion->IsAnimating())
+		{
+			delete explosion;
+			it = m_explosions.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
