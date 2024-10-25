@@ -76,22 +76,22 @@ void Player::Process(float deltaTime, InputSystem& inputSystem, Renderer& render
     if (!(m_currentWeapon == 1 && m_attackCooldownRemaining > 0.0f))
     {
         // Check for movement input and accumulate movement in respective directions
-        if (inputSystem.GetKeyState(SDL_SCANCODE_UP) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_UP) == BS_HELD)
+        if (inputSystem.GetKeyState(SDL_SCANCODE_W) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_W) == BS_HELD)
         {
             movement.y -= 1.0f;  // Move up
             m_facingDirection.Set(0.0f, -1.0f);  // Face up
         }
-        if (inputSystem.GetKeyState(SDL_SCANCODE_DOWN) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_DOWN) == BS_HELD)
+        if (inputSystem.GetKeyState(SDL_SCANCODE_S) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_S) == BS_HELD)
         {
             movement.y += 1.0f;  // Move down
             m_facingDirection.Set(0.0f, 1.0f);  // Face down
         }
-        if (inputSystem.GetKeyState(SDL_SCANCODE_LEFT) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_LEFT) == BS_HELD)
+        if (inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_A) == BS_HELD)
         {
             movement.x -= 1.0f;  // Move left
             m_facingDirection.Set(-1.0f, 0.0f);  // Face left
         }
-        if (inputSystem.GetKeyState(SDL_SCANCODE_RIGHT) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_RIGHT) == BS_HELD)
+        if (inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_PRESSED || inputSystem.GetKeyState(SDL_SCANCODE_D) == BS_HELD)
         {
             movement.x += 1.0f;  // Move right
             m_facingDirection.Set(1.0f, 0.0f);  // Face right
