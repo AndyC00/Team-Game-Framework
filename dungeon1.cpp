@@ -120,7 +120,8 @@ bool Dungeon1Scene::Initialise(Renderer& renderer)
 	SpawnEnemies();
 
 	// Initialize hearts based on player's lives
-	for (int i = 0; i < m_pPlayer->GetLives(); ++i) {
+	for (int i = 0; i < m_pPlayer->GetLives(); ++i) 
+	{
 		m_pPlayerHPSprite = m_pRenderer->CreateSprite("Sprites\\heart.png");
 		m_pPlayerHPSprite->SetScale(0.3f);
 		m_pPlayerHPSprite->SetX(200 + i * 150);  // Positioning hearts horizontally

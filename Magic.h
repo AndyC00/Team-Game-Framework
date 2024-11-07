@@ -19,7 +19,7 @@ public:
     void SetPosition(const Vector2& position, float angle);
     const Vector2& GetPosition() const;
     bool IsAnimating() const;
-    float GetRadius() const;
+    float GetRadius() const override;
 
 protected:
     Renderer* m_pRenderer;
